@@ -7,6 +7,8 @@
   "eslint.validate": ["javascript", "typescript", "typescriptreact"],
   "editor.codeActionsOnSave": {
     "source.fixAll": "always",
-    "source.fixAll.eslint": "always"
-  }
+    "source.fixAll.eslint": "always",
+    "source.organizeImports": "always"
+  },
+  "editor.tabSize": 2
 }
