@@ -4,20 +4,37 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "bun run --hot src/index.ts",
     "start": "bun run src/index.ts",
+    "dev": "bun run --hot src/index.ts",
+    "prune": "ts-prune",
     "lint": "eslint --fix .",
-    "format": "prettier --write ."
+    "format": "prettier --write . --log-level error",
+    "preflight": "bun run tsc && bun run prune && bun run lint && bun run format",
+    "env": "cp .env.example .env",
+    "docker:up": "docker compose up -d",
+    "docker:down": "docker compose down",
+    "docker:clean": "docker compose down -v --remove-orphans",
+    "db:generate": "bun run drizzle-kit generate --config=src/infra/database/local.drizzle.config.ts",
+    "db:push:local": "bun run drizzle-kit push --config=src/infra/database/local.drizzle.config.ts",
+    "db:push:test": "bun run drizzle-kit push --config=src/infra/database/test.drizzle.config.ts"
   },
   "dependencies": {
-    "hono": "^4.9.2"
+    "argon2": "^0.44.0",
+    "drizzle-orm": "^0.44.4",
+    "hono": "^4.9.2",
+    "nanoid": "^5.1.5",
+    "pg": "^8.16.3",
+    "zod": "^4.0.17"
   },
   "devDependencies": {
     "@eslint/js": "^9.33.0",
     "@types/bun": "latest",
+    "@types/pg": "^8.15.5",
+    "drizzle-kit": "^0.31.4",
     "eslint": "^9.33.0",
     "globals": "^16.3.0",
     "prettier": "^3.6.2",
+    "ts-prune": "^0.10.3",
     "typescript-eslint": "^8.39.1"
   }
 }

@@ -1,9 +1,13 @@
 import { Hono } from 'hono'
+import { env } from './env'
+import { identityRouter } from './identity/router'
 
 const app = new Hono()
 
-app.get('/', (c) => {
-  return c.text('Hello Hono!')
-})
+app.route('/identity', identityRouter)
 
-export default app
+// ts-prune-ignore-next
+export default {
+  port: env.API_PORT,
+  fetch: app.fetch,
+}

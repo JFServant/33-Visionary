@@ -1,0 +1,22 @@
+{
+  "Servers": {
+    "1": {
+      "Name": "Local DB",
+      "Group": "Visionary",
+      "Host": "local_db",
+      "Port": 5432,
+      "Username": "local_user",
+      "SSLMode": "disable",
+      "MaintenanceDB": "postgres"
+    },
+    "2": {
+      "Name": "Test DB",
+      "Group": "Visionary",
+      "Host": "test_db",
+      "Port": 5432,
+      "Username": "test_user",
+      "SSLMode": "disable",
+      "MaintenanceDB": "postgres"
+    }
+  }
+}
