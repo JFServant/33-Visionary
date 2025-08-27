@@ -1,0 +1,105 @@
+name: Backend CI/CD 🚀
+
+on:
+  push:
+    paths:
+      - "backend/**"
+  pull_request:
+    paths:
+      - "backend/**"
+
+jobs:
+  # ---------------------
+  # 1️⃣ Preflight Checks
+  # ---------------------
+  Preflight:
+    name: 🔎 Preflight Checks
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: backend
+    steps:
+      - name: 📥 Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: 🥖 Set up Bun
+        uses: oven-sh/setup-bun@v1
+        with:
+          bun-version: latest
+
+      - name: 📦 Cache Dependencies
+        uses: actions/cache@v4
+        with:
+          path: backend/node_modules
+          key: ${{ runner.os }}-bun-${{ hashFiles('bun.lock') }}
+
+      - name: 📦 Install Dependencies
+        run: bun install
+
+      - name: ✅ Run Preflight (TS, Lint, etc.)
+        run: bun run preflight
+
+  # ---------------------
+  # 2️⃣ Integration Tests
+  # ---------------------
+  Tests:
+    name: 🧪 Integration Tests
+    runs-on: ubuntu-latest
+    needs: Preflight
+    defaults:
+      run:
+        working-directory: backend
+    services:
+      postgres:
+        image: postgres:17
+        ports:
+          - "49323:5432"
+        env:
+          POSTGRES_DB: test_db
+          POSTGRES_USER: test_user
+          POSTGRES_PASSWORD: test_pass
+        options: >-
+          --health-cmd="pg_isready -U test_user -d test_db"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
+    steps:
+      - name: 📥 Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: 🥖 Set up Bun
+        uses: oven-sh/setup-bun@v1
+        with:
+          bun-version: latest
+
+      - name: 📦 Restore Cache
+        uses: actions/cache@v4
+        with:
+          path: backend/node_modules
+          key: ${{ runner.os }}-bun-${{ hashFiles('bun.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-bun-
+
+      - name: 📦 Install Dependencies
+        run: bun install
+
+      - name: ⚙️ Setup Environment
+        run: bun run env
+
+      - name: 🗄️ Apply Test DB Schema
+        run: bun run db:push:test
+
+      - name: 🧪 Run Integration Tests
+        run: bun test
+
+  # ---------------------
+  # 3️⃣ Deploy (Dummy)
+  # ---------------------
+  Deploy:
+    name: 🚀 Deploy to Production
+    runs-on: ubuntu-latest
+    needs: Tests
+    if: github.ref == 'refs/heads/main'
+    steps:
+      - name: 📦 Dummy Deploy
+        run: echo "🚀 Deploying to production... (dummy step)"
