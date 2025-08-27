@@ -7,7 +7,7 @@ export default defineConfig({
   schema: 'src/infra/database/schema/*',
   out: 'src/infra/database/migrations',
   dbCredentials: {
-    host: env.IS_DOCKER ? env.TEST_DB_HOST : 'localhost',
+    host: env.TEST_DB_HOST,
     port: env.TEST_DB_PORT,
     database: env.TEST_DB_NAME,
     user: env.TEST_DB_USER,

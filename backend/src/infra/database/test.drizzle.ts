@@ -4,7 +4,7 @@ import { env } from '../../env'
 import type { DrizzleTransaction } from './drizzle.types'
 
 const pool = new Pool({
-  host: env.IS_DOCKER ? env.TEST_DB_HOST : 'localhost',
+  host: env.TEST_DB_HOST,
   port: env.TEST_DB_PORT,
   database: env.TEST_DB_NAME,
   user: env.TEST_DB_USER,

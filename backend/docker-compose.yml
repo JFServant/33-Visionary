@@ -1,22 +1,22 @@
 services:
   local_db:
     image: postgres:17
-    container_name: ${LOCAL_DB_HOST}
+    container_name: local_db
     restart: always
     env_file:
       - .env
     ports:
-      - '${LOCAL_DB_PORT}:5432'
+      - '${DB_PORT}:5432'
     environment:
-      POSTGRES_DB: ${LOCAL_DB_NAME}
-      POSTGRES_USER: ${LOCAL_DB_USER}
-      POSTGRES_PASSWORD: ${LOCAL_DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME}
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
     volumes:
       - local_db_data:/var/lib/postgresql/data
 
   test_db:
     image: postgres:17
-    container_name: ${TEST_DB_HOST}
+    container_name: test_db
     restart: always
     env_file:
       - .env

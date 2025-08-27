@@ -14,8 +14,8 @@
     "docker:up": "docker compose up -d",
     "docker:down": "docker compose down",
     "docker:clean": "docker compose down -v --remove-orphans",
-    "db:generate": "bun run drizzle-kit generate --config=src/infra/database/local.drizzle.config.ts",
-    "db:push:local": "bun run drizzle-kit push --config=src/infra/database/local.drizzle.config.ts",
+    "db:generate": "bun run drizzle-kit generate --config=src/infra/database/drizzle.config.ts",
+    "db:push": "bun run drizzle-kit push --config=src/infra/database/drizzle.config.ts",
     "db:push:test": "bun run drizzle-kit push --config=src/infra/database/test.drizzle.config.ts"
   },
   "dependencies": {
