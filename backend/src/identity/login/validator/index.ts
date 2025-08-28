@@ -2,9 +2,10 @@ import { z } from 'zod'
 import type { ILoginValidator, Output } from './contract'
 
 const schema = z.object({
-  email: z.email(),
+  email: z.email().trim().toLowerCase(),
   password: z
     .string()
+    .trim()
     .min(8)
     .regex(/[A-Z]/)
     .regex(/[a-z]/)

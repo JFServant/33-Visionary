@@ -1,6 +1,8 @@
 import z from 'zod'
 
 const schema = z.object({
+  CLIENT_URL: z.string(),
+
   API_PORT: z.string().regex(/^\d+$/).transform(Number),
 
   DB_HOST: z.string(),
