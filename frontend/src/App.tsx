@@ -2,7 +2,7 @@ import { BrowserRouter, Navigate, Route, Routes } from 'react-router'
 import DetectionScreen from './detection/screen'
 import Guard from './global/guard'
 import IdentityScreen from './identity/screen'
-import SignupComponent from './identity/signup'
+import SignupComponent from './identity/signup/component'
 
 const App = () => (
   <BrowserRouter>

@@ -4,13 +4,13 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
+    "setup": "bun install && bun run env",
     "dev": "vite",
     "build": "tsc -b && vite build",
-    "check": "bun run tsc --project tsconfig.app.json",
-    "prune": "ts-prune",
+    "prune": "ts-prune -p tsconfig.app.json -e",
     "lint": "eslint --fix .",
     "format": "prettier --write . --log-level error",
-    "preflight": "bun run check && bun run prune && bun run lint && bun run format",
+    "preflight": "bun run tsc -p tsconfig.app.json && bun run prune && bun run lint && bun run format",
     "env": "cp .env.example .env",
     "preview": "vite preview"
   },
