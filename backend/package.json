@@ -4,9 +4,10 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
+    "setup": "bun install && bun run env && bun run docker:up && bun run db:push && bun run db:push:test",
     "start": "bun run src/index.ts",
     "dev": "bun run --hot src/index.ts",
-    "prune": "ts-prune",
+    "prune": "ts-prune -e",
     "lint": "eslint --fix .",
     "format": "prettier --write . --log-level error",
     "preflight": "bun run tsc && bun run prune && bun run lint && bun run format",
