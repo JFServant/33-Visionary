@@ -42,7 +42,7 @@ const LoginComponent = () => {
     Storer.set({ key: 'sub', data: res.data.sub })
     Storer.set({ key: 'token', data: res.data.token })
 
-    navigate('/detection')
+    navigate('/detection', { replace: true })
   }
 
   return (

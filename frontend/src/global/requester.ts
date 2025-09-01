@@ -31,7 +31,7 @@ export const useRequest = <T>(): Request<T> => {
       if (res.status === 401) {
         Storer.remove('token')
         Storer.remove('sub')
-        navigate('/identity')
+        navigate('/identity', { replace: true })
       }
 
       return res.json()

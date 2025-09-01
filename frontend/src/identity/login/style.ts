@@ -1,4 +1,4 @@
-import { sx } from '../../theme'
+import { sx } from '../../design/theme'
 
 export const formSX = sx(({ size }) => ({
   flex: 1,

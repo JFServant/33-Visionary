@@ -1,4 +1,4 @@
-import { sx } from '../theme'
+import { sx } from '../design/theme'
 
 export const screenSX = sx(() => ({
   height: '100vh',
@@ -17,26 +17,7 @@ export const mainSX = sx(({ shadows, shape, size }) => ({
   gap: size[1],
 }))
 
-export const h1SX = sx(({ weight, gradient, precision }) => ({
-  fontWeight: weight[6],
-  background: gradient.right,
-  WebkitBackgroundClip: 'text',
-  backgroundClip: 'text',
-  WebkitTextFillColor: 'transparent',
-  color: 'transparent',
-  WebkitFontSmoothing: 'antialiased',
-  MozOsxFontSmoothing: 'grayscale',
-  letterSpacing: `-${precision[2]}`,
-  marginLeft: `-${precision[2]}`,
-}))
-
 export const outletSX = sx(() => ({
   flex: 1,
   display: 'flex',
-}))
-
-export const sidelineSX = sx(({ precision, gradient }) => ({
-  border: 'none',
-  width: precision[2],
-  background: gradient.bottom,
 }))

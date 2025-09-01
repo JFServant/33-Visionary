@@ -1,16 +1,16 @@
-import { Box, Typography } from '@mui/material'
+import { Box } from '@mui/material'
 import { Outlet } from 'react-router'
-import { h1SX, mainSX, outletSX, screenSX, sidelineSX } from './style'
+import VisionaryDivider from '../design/visionary-divider'
+import VisionaryTitle from '../design/visionary-title'
+import { mainSX, outletSX, screenSX } from './style'
 
 const IdentityScreen = () => {
   return (
     <Box component="div" sx={screenSX}>
       <Box component="main" sx={mainSX}>
-        <Typography component="h1" variant="h4" sx={h1SX}>
-          Visionary
-        </Typography>
+        <VisionaryTitle />
         <Box component="div" sx={outletSX}>
-          <Box component="hr" sx={sidelineSX} />
+          <VisionaryDivider direction="to bottom" />
           <Outlet />
         </Box>
       </Box>

@@ -5,13 +5,11 @@ declare module '@mui/material/styles' {
     size: Size
     precision: Precision
     weight: Weight
-    gradient: Gradient
   }
   interface ThemeOptions {
     size: Size
     precision: Precision
     weight: Weight
-    gradient: Gradient
   }
 }
 
@@ -43,12 +41,4 @@ type Weight = {
   4: 400
   5: 500
   6: 600
-}
-
-// ts-prune-ignore-next
-type Gradient = {
-  top: 'linear-gradient(to top, #6a5af9, #00d4ff, #ff4dd2)'
-  right: 'linear-gradient(to right, #6a5af9, #00d4ff, #ff4dd2)'
-  bottom: 'linear-gradient(to bottom, #6a5af9, #00d4ff, #ff4dd2)'
-  left: 'linear-gradient(to left, #6a5af9, #00d4ff, #ff4dd2)'
 }
