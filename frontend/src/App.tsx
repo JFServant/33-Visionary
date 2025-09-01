@@ -1,6 +1,7 @@
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router'
 import DetectionScreen from './detection/screen'
 import Guard from './global/guard'
+import LoginComponent from './identity/login/component'
 import IdentityScreen from './identity/screen'
 import SignupComponent from './identity/signup/component'
 
@@ -10,6 +11,7 @@ const App = () => (
       <Route path="/identity" element={<IdentityScreen />}>
         <Route index element={<Navigate to="signup" replace />} />
         <Route path="signup" element={<SignupComponent />} />
+        <Route path="login" element={<LoginComponent />} />
       </Route>
 
       <Route element={<Guard />}>
