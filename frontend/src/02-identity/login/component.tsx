@@ -3,24 +3,23 @@ import { Alert, Box, Button, TextField, Typography, type AlertProps } from '@mui
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { Link, useNavigate } from 'react-router'
-import { useRequest } from '../../global/requester'
-import { Storer } from '../../global/storer'
-import type { ApiData } from './contract'
+import { useRequest } from '../../00-global/requester'
+import { Storer } from '../../00-global/storer'
+import type { Data } from './contract'
 import { buttonSX, formSX, h2SX, linkSX } from './style'
-import type { Schema } from './validator'
-import { schema } from './validator'
+import { schema, type Schema } from './validator'
 
 type State = {
   severity: AlertProps['severity']
   message: string
 }
 
-const SignupComponent = () => {
+const LoginComponent = () => {
   const {
     register,
     handleSubmit,
     formState: {
-      errors: { username, email, password },
+      errors: { email, password },
       isSubmitting,
     },
   } = useForm<Schema>({
@@ -32,11 +31,11 @@ const SignupComponent = () => {
     message: 'Advice: If you use a shared computer, make sure to open a private tab',
   })
 
-  const request = useRequest<ApiData>()
+  const request = useRequest<Data>()
   const navigate = useNavigate()
 
   const onSubmit = async (data: unknown): Promise<void> => {
-    const res = await request({ path: '/identity/signup', method: 'POST', body: data })
+    const res = await request({ path: '/identity/login', method: 'POST', body: data })
 
     if ('error' in res) return setAlert({ severity: 'error', message: res.error.message })
 
@@ -49,19 +48,11 @@ const SignupComponent = () => {
   return (
     <Box component="form" sx={formSX} onSubmit={handleSubmit(onSubmit)} noValidate>
       <Typography component="h2" sx={h2SX}>
-        Create your account
+        Use your account
       </Typography>
       <Typography component="p" variant="subtitle2">
-        Fill up your information:
+        Enter your credentials:
       </Typography>
-      <TextField
-        type="text"
-        variant="filled"
-        label="Username"
-        {...register('username')}
-        error={!!username}
-        helperText={username?.message || ' '}
-      />
       <TextField
         type="email"
         variant="filled"
@@ -79,7 +70,7 @@ const SignupComponent = () => {
         helperText={password?.message || ' '}
       />
       <Button type="submit" variant="contained" sx={buttonSX} loading={isSubmitting}>
-        Sign Up
+        Log in
       </Button>
       <Alert severity={alert.severity}>
         <Typography component="p" variant="subtitle2">
@@ -87,10 +78,10 @@ const SignupComponent = () => {
         </Typography>
       </Alert>
       <Typography component="p" sx={linkSX}>
-        Already have an account? <Link to="/identity/login">Log in</Link>
+        No account yet? <Link to="/identity/signup">Sign up</Link>
       </Typography>
     </Box>
   )
 }
 
-export default SignupComponent
+export default LoginComponent

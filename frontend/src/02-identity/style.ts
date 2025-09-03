@@ -1,4 +1,4 @@
-import { sx } from '../design/theme'
+import { sx } from '../01-design/theme'
 
 export const screenSX = sx(() => ({
   height: '100vh',

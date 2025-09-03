@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router'
-import { env } from '../env'
+import { env } from './env'
 import { Storer } from './storer'
 
 type Options = {

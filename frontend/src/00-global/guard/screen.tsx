@@ -8,8 +8,8 @@ import {
 } from '@mui/icons-material'
 import { Box, List, ListItemButton, ListItemIcon, ListItemText, Typography } from '@mui/material'
 import { Navigate, NavLink, Outlet, useNavigate } from 'react-router'
-import VisionaryDivider from '../../design/visionary-divider'
-import VisionaryTitle from '../../design/visionary-title'
+import VisionaryDivider from '../../01-design/visionary-divider'
+import VisionaryTitle from '../../01-design/visionary-title'
 import { Storer } from '../storer'
 import { contentSX, footerSX, headerSX, itemSX, listSX, mainSX, menuSX, screenSX } from './style'
 
