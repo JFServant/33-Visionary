@@ -1,11 +1,11 @@
 import { defineConfig } from 'drizzle-kit'
-import { env } from '../../env'
+import { env } from '../../00-global/env'
 
 // ts-prune-ignore-next
 export default defineConfig({
   dialect: 'postgresql',
-  schema: 'src/infra/database/schema/*',
-  out: 'src/infra/database/migrations',
+  schema: 'src/01-infra/database/schema/*',
+  out: 'src/01-infra/database/migrations',
   dbCredentials: {
     host: env.TEST_DB_HOST,
     port: env.TEST_DB_PORT,

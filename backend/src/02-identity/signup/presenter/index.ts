@@ -1,14 +1,15 @@
 import type { Context } from 'hono'
-import type { Data, Error, ISignupPresenter } from './contract'
+import type { ApiError } from '../../../00-global/types'
+import type { Data, ISignupPresenter } from './contract'
 
 export class SignupPresenter implements ISignupPresenter {
   constructor(private readonly c: Context) {}
 
-  validationFail(error: Error): Response {
+  validationFail(error: ApiError): Response {
     return this.c.json(error, 400)
   }
 
-  emailAlreadyTaken(error: Error): Response {
+  emailAlreadyTaken(error: ApiError): Response {
     return this.c.json(error, 400)
   }
 

@@ -1,7 +1,7 @@
 import { Hono } from 'hono'
 import { cors } from 'hono/cors'
-import { env } from './env'
-import { identityRouter } from './identity/router'
+import { env } from './00-global/env'
+import { identityRouter } from './02-identity/router'
 
 const app = new Hono()
 

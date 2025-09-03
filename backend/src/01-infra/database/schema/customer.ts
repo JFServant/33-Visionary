@@ -1,5 +1,5 @@
 import { pgTable, serial, timestamp, varchar } from 'drizzle-orm/pg-core'
-import { nanoid } from '../utils/nanoid'
+import { nanoid } from '../../../00-global/nanoid'
 
 export const customers = pgTable('customers', {
   _id: serial('_id').primaryKey(),
