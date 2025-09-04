@@ -28,7 +28,7 @@ const factory = async ({ presenter, input, tx }: Config): Promise<void> => {
     presenter,
     new LoginRepository(tx),
     new LoginHasher(),
-    new LoginTokenizer({ minutes: 1, secret: 'super_secret' })
+    new LoginTokenizer()
   ).execute()
 }
 

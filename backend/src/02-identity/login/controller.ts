@@ -1,6 +1,5 @@
 import type { Context } from 'hono'
 import { LoginUsecase } from '.'
-import { env } from '../../00-global/env'
 import { getTransaction, Transaction } from '../../01-infra/database/drizzle'
 import { LoginHasher } from './hasher'
 import { LoginPresenter } from './presenter'
@@ -16,7 +15,7 @@ export class LoginController {
       new LoginPresenter(c),
       new LoginRepository(getTransaction()),
       new LoginHasher(),
-      new LoginTokenizer({ minutes: env.JWT_EXP_IN_MINUTES, secret: env.JWT_SECRET })
+      new LoginTokenizer()
     ).execute()
   }
 }

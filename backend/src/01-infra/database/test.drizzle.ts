@@ -1,14 +1,13 @@
 import { drizzle } from 'drizzle-orm/node-postgres'
 import { Pool } from 'pg'
-import { env } from '../../00-global/env'
 import type { DrizzleTransaction } from './drizzle.types'
 
 const pool = new Pool({
-  host: env.TEST_DB_HOST,
-  port: env.TEST_DB_PORT,
-  database: env.TEST_DB_NAME,
-  user: env.TEST_DB_USER,
-  password: env.TEST_DB_PASSWORD,
+  host: 'localhost',
+  port: 49323,
+  database: 'test_db',
+  user: 'test_user',
+  password: 'test_pass',
 })
 
 const db = drizzle({ client: pool })

@@ -17,7 +17,7 @@ const factory = async ({ presenter, input, tx }: Config): Promise<void> => {
     presenter,
     new SignupRepository(tx),
     new SignupHasher(),
-    new SignupTokenizer({ minutes: 1, secret: 'super_secret' })
+    new SignupTokenizer()
   ).execute()
 }
 

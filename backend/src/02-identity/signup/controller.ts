@@ -1,6 +1,5 @@
 import type { Context } from 'hono'
 import { SignupUsecase } from '.'
-import { env } from '../../00-global/env'
 import { getTransaction, Transaction } from '../../01-infra/database/drizzle'
 import { SignupHasher } from './hasher'
 import { SignupPresenter } from './presenter'
@@ -16,7 +15,7 @@ export class SignupController {
       new SignupPresenter(c),
       new SignupRepository(getTransaction()),
       new SignupHasher(),
-      new SignupTokenizer({ minutes: env.JWT_EXP_IN_MINUTES, secret: env.JWT_SECRET })
+      new SignupTokenizer()
     ).execute()
   }
 }
