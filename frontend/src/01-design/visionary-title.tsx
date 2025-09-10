@@ -1,4 +1,5 @@
 import { Box, Typography } from '@mui/material'
+import type { JSX } from 'react'
 import { sx } from './theme'
 
 const SX = sx(({ weight, palette, precision }) => ({
@@ -15,7 +16,7 @@ const SX = sx(({ weight, palette, precision }) => ({
   marginLeft: `-${precision[2]}`,
 }))
 
-const VisionaryTitle = () => (
+const VisionaryTitle = (): JSX.Element => (
   <Box component="div">
     <Typography component="h1" variant="h4" sx={SX}>
       Visionary

@@ -1,10 +1,11 @@
 import { Box } from '@mui/material'
+import type { JSX } from 'react'
 import { Outlet } from 'react-router'
 import VisionaryDivider from '../01-design/visionary-divider'
 import VisionaryTitle from '../01-design/visionary-title'
 import { mainSX, outletSX, screenSX } from './style'
 
-const IdentityScreen = () => {
+const IdentityScreen = (): JSX.Element => {
   return (
     <Box component="div" sx={screenSX}>
       <Box component="main" sx={mainSX}>

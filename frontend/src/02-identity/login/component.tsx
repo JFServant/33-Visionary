@@ -1,6 +1,6 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Alert, Box, Button, TextField, Typography, type AlertProps } from '@mui/material'
-import { useState } from 'react'
+import { useState, type JSX } from 'react'
 import { useForm } from 'react-hook-form'
 import { Link, useNavigate } from 'react-router'
 import { useRequest } from '../../00-global/requester'
@@ -14,7 +14,7 @@ type State = {
   message: string
 }
 
-const LoginComponent = () => {
+const LoginComponent = (): JSX.Element => {
   const {
     register,
     handleSubmit,
@@ -42,7 +42,7 @@ const LoginComponent = () => {
     Storer.set({ key: 'sub', data: res.data.sub })
     Storer.set({ key: 'token', data: res.data.token })
 
-    navigate('/detection', { replace: true })
+    navigate('/image', { replace: true })
   }
 
   return (

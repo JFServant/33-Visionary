@@ -7,6 +7,7 @@ import {
   UploadFileRounded,
 } from '@mui/icons-material'
 import { Box, List, ListItemButton, ListItemIcon, ListItemText, Typography } from '@mui/material'
+import type { JSX } from 'react'
 import { Navigate, NavLink, Outlet, useNavigate } from 'react-router'
 import VisionaryDivider from '../../01-design/visionary-divider'
 import VisionaryTitle from '../../01-design/visionary-title'
@@ -15,19 +16,19 @@ import { contentSX, footerSX, headerSX, itemSX, listSX, mainSX, menuSX, screenSX
 
 const menuItems = [
   { label: 'Dashboard', icon: <DashboardRounded />, path: '#' },
-  { label: 'Upload', icon: <UploadFileRounded />, path: '/detection/upload' },
+  { label: 'Upload', icon: <UploadFileRounded />, path: '/image/upload' },
   { label: 'History', icon: <HistoryRounded />, path: '#' },
   { label: 'Settings', icon: <SettingsRounded />, path: '#' },
   { label: 'Help', icon: <HelpRounded />, path: '#' },
 ]
 
-const GuardScreen = () => {
+const GuardScreen = (): JSX.Element => {
   const navigate = useNavigate()
   const token = Storer.get('token')
 
   if (!token) return <Navigate to="/identity" replace />
 
-  const onClick = () => {
+  const onClick = (): void => {
     Storer.remove('sub')
     Storer.remove('token')
     navigate('/identity', { replace: true })
