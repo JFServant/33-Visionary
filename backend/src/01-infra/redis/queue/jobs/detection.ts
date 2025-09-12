@@ -1,12 +1,11 @@
 import { QueueManager } from '../manager'
 
-type DetectionPayload = {
+export type DetectionPayload = {
+  tmpPath: string
   originalName: string
   internalName: string
-  tmpPath: string
-  size: number
-  mimeType: string
-  requesterID: string
+  customerID: string
 }
 
 export const DetectionScheduler = QueueManager.schedule<DetectionPayload>('detection')
+export const DetectionAssigner = QueueManager.assign<DetectionPayload>('detection')

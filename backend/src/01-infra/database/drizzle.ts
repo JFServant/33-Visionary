@@ -23,7 +23,7 @@ export const Transaction =
   (_: unknown, __: unknown, descriptor: PropertyDescriptor): void => {
     const originalMethod = descriptor.value
 
-    descriptor.value = function (...args: unknown[]) {
+    descriptor.value = function (...args: unknown[]): Promise<unknown> {
       return db.transaction((tx: DrizzleTransaction) =>
         als.run(tx, () => originalMethod.apply(this, args))
       )

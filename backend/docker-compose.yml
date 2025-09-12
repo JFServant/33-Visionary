@@ -73,7 +73,24 @@ services:
     depends_on:
       - redis
 
+  minio:
+    image: minio/minio:latest
+    container_name: minio
+    restart: always
+    env_file:
+      - .env
+    ports:
+      - '49327:9000'
+      - '49328:9090'
+    environment:
+      MINIO_ROOT_USER: ${S3_ACCESS_KEY}
+      MINIO_ROOT_PASSWORD: ${S3_SECRET_KEY}
+    volumes:
+      - minio_data:/data
+    command: ['server', '/data', '--console-address', ':9090']
+
 volumes:
   local_db_data:
   test_db_data:
   redis_data:
+  minio_data:

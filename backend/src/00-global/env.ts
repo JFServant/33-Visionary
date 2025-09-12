@@ -14,6 +14,11 @@ const schema = z.object({
   REDIS_HOST: z.string().trim().nonempty(),
   REDIS_PORT: z.string().trim().nonempty().regex(/^\d+$/).transform(Number),
   REDIS_PASSWORD: z.string().trim().nonempty(),
+
+  S3_ENDPOINT: z.string().trim().nonempty(),
+  S3_REGION: z.string().trim().nonempty(),
+  S3_ACCESS_KEY: z.string().trim().nonempty(),
+  S3_SECRET_KEY: z.string().trim().nonempty(),
 })
 
 export const env = schema.parse(process.env)

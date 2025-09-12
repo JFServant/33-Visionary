@@ -1,12 +1,15 @@
 import { pgTable, serial, text, timestamp } from 'drizzle-orm/pg-core'
 import { nanoid } from '../../../00-global/nanoid'
+import { customers } from './customer'
 
-export const customers = pgTable('customers', {
+export const images = pgTable('images', {
   _id: serial('_id').primaryKey(),
   id: text('id').notNull().unique().$defaultFn(nanoid),
-  email: text('email').notNull().unique(),
-  password: text('password').notNull(),
-  username: text('username').notNull(),
+  originalName: text('original_name').notNull(),
+  internalName: text('internal_name').notNull(),
   createdAt: timestamp('created_at').notNull().defaultNow(),
   updatedAt: timestamp('updated_at').notNull().defaultNow(),
+  customerID: text('customer_id')
+    .notNull()
+    .references(() => customers.id),
 })

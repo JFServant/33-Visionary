@@ -17,6 +17,7 @@ export default defineConfig([
           disallowTypeAnnotations: true,
         },
       ],
+      '@typescript-eslint/explicit-function-return-type': 'error',
     },
   },
   tseslint.configs.recommended,

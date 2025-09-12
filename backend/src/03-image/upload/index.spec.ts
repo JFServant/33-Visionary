@@ -36,7 +36,7 @@ const fileBuilder = ({ name, type }: FileBuilderConfig): FormData => {
   return formData
 }
 
-const fileCleaner = () => {
+const fileCleaner = (): void => {
   const folder = join(__dirname, 'tmp-test')
   const files = readdirSync(folder)
   const filesToDelete = files.filter((file) => file !== 'dog.jpg' && file !== 'text.jpg')
@@ -71,12 +71,10 @@ describe('UploadUsecase', () => {
     expect(MockedUploadPresenter.success).toHaveBeenCalledWith({ data: true })
 
     expect(MockedUploadQueuer.detection).toHaveBeenCalledWith({
+      tmpPath: expect.any(String),
       originalName: expect.any(String),
       internalName: expect.any(String),
-      tmpPath: expect.any(String),
-      size: expect.any(Number),
-      mimeType: expect.any(String),
-      requesterID: expect.any(String),
+      customerID: expect.any(String),
     })
 
     fileCleaner()

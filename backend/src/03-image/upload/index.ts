@@ -18,17 +18,18 @@ export class UploadUsecase {
       return this.presenter.validationFail({ error: validation.error })
     }
 
-    const { internalName, tmpPath } = await this.storer.saveToDisk(validation.image)
+    const { tmpPath, internalName } = await this.storer.saveToDisk({
+      image: validation.image,
+      customerID,
+    })
 
-    const { name, size, type } = validation.image
+    const { name } = validation.image
 
     await this.queuer.detection({
+      tmpPath,
       originalName: name,
       internalName,
-      tmpPath,
-      size,
-      mimeType: type,
-      requesterID: customerID,
+      customerID,
     })
 
     return this.presenter.success({ data: true })

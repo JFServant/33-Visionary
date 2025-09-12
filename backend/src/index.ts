@@ -1,18 +1,37 @@
+import type { ServeOptions } from 'bun'
 import { Hono } from 'hono'
 import { cors } from 'hono/cors'
 import { env } from './00-global/env'
+import { DetectionAssigner } from './01-infra/redis/queue/jobs/detection'
+import { S3Manager } from './01-infra/s3/manager'
+import { sseConnection } from './01-infra/sse/connection'
+import { SSEManager } from './01-infra/sse/manager'
 import { identityRouter } from './02-identity/router'
+import { DetectionModel } from './03-image/detection/model'
+import { DetectionWorker } from './03-image/detection/worker'
 import { imageRouter } from './03-image/router'
 
 const app = new Hono()
 
 app.use(cors({ origin: env.CLIENT_URL }))
 
+app.get('/event/:customerID', sseConnection)
+
 app.route('/identity', identityRouter)
 app.route('/image', imageRouter)
+
+DetectionAssigner(DetectionWorker.run)
+
+// Initialize tools
+;(async (): Promise<void> => {
+  await S3Manager.init()
+  await DetectionModel.init()
+  SSEManager.heartbeat()
+})()
 
 // ts-prune-ignore-next
 export default {
   port: 49321,
+  idleTimeout: 0,
   fetch: app.fetch,
-}
+} satisfies ServeOptions

@@ -2,12 +2,10 @@ import { DetectionScheduler } from '../../01-infra/redis/queue/jobs/detection'
 
 // Contract
 type Payload = {
+  tmpPath: string
   originalName: string
   internalName: string
-  tmpPath: string
-  size: number
-  mimeType: string
-  requesterID: string
+  customerID: string
 }
 
 export interface IUploadQueuer {
