@@ -8,40 +8,38 @@ type Token = string
 
 export class Authenticator {
   static sign(payload: Payload): Promise<Token> {
-    const expiresIn = (minutes: number): number => {
-      return Math.floor(Date.now() / 1000) + 60 * minutes
-    }
-
-    return sign({ ...payload, exp: expiresIn(60) }, env.JWT_SECRET)
+    return sign({ ...payload, exp: this.expiresIn(60) }, env.JWT_SECRET)
   }
 
-  static async guard(c: Context, next: Next): Promise<Response | void> {
-    const header = c.req.header('Authorization')
-
-    const error: ApiError = { error: { message: 'Unauthorized.' } }
-
-    if (!header?.startsWith('Bearer ')) return c.json(error, 401)
-
-    const token = header.split(' ')[1]
+  static async guard({ req, json, set }: Context, next: Next): Promise<Response | void> {
+    const header = req.header('Authorization')
 
     try {
+      if (!header?.startsWith('Bearer ')) throw 'Missing Bearer.'
+
+      const token = header.split(' ')[1]
+
       const payload = await verify(token, env.JWT_SECRET)
 
-      if (typeof payload?.sub !== 'string') throw 'DEV_LOGIC_FAIL'
+      if (typeof payload?.sub !== 'string') throw 'Dev logic fail.'
 
-      c.set('customerID', payload.sub)
+      set('customerID', payload.sub)
 
       return next()
     } catch {
-      return c.json(error, 401)
+      return json({ error: { message: 'Unauthorized.' } } satisfies ApiError, 401)
     }
   }
 
-  static getCustomerID(c: Context): string {
-    const customerID = c.get('customerID')
+  static getCustomerID(get: Context['get']): string {
+    const customerID = get('customerID')
 
-    if (!customerID) throw 'DEV_LOGIC_FAIL'
+    if (!customerID) throw 'Dev logic fail.'
 
     return customerID
+  }
+
+  private static expiresIn(minutes: number): number {
+    return Math.floor(Date.now() / 1000) + 60 * minutes
   }
 }

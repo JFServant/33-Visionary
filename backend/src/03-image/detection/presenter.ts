@@ -1,31 +1,28 @@
-import type { ApiError } from '../../00-global/types'
 import { SSEManager } from '../../01-infra/sse/manager'
 
 // Contract
-type Data = { data: true }
-
 export interface IDetectionPresenter {
-  success(data: Data): Promise<void>
-  detectionFail(error: ApiError): Promise<void>
+  success(data: string): Promise<void>
+  detectionFail(error: string): Promise<void>
 }
 
 // Concrete
 export class DetectionPresenter implements IDetectionPresenter {
   constructor(private readonly customerID: string) {}
 
-  async success(data: Data): Promise<void> {
+  async success(data: string): Promise<void> {
     await SSEManager.write({
       customerID: this.customerID,
       event: 'detection',
-      data: JSON.stringify(data),
+      message: data,
     })
   }
 
-  async detectionFail(error: ApiError): Promise<void> {
+  async detectionFail(error: string): Promise<void> {
     await SSEManager.write({
       customerID: this.customerID,
       event: 'detection',
-      data: JSON.stringify(error),
+      message: error,
     })
   }
 }

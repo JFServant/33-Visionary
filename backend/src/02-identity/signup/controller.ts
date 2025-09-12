@@ -9,11 +9,14 @@ import { SignupValidator } from './validator'
 
 export class SignupController {
   @Transaction()
-  static async run(c: Context): Promise<Response> {
+  static async run({ req, json }: Context): Promise<Response> {
+    const body = await req.json().catch(Error)
+    const tx = getTransaction()
+
     return new SignupUsecase(
-      new SignupValidator(await c.req.json()),
-      new SignupPresenter(c),
-      new SignupRepository(getTransaction()),
+      new SignupValidator(body),
+      new SignupPresenter(json),
+      new SignupRepository(tx),
       new SignupHasher(),
       new SignupTokenizer()
     ).execute()

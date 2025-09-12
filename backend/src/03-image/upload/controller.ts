@@ -7,12 +7,15 @@ import { UploadStorer } from './storer'
 import { UploadValidator } from './validator'
 
 export class UploadController {
-  static async run(c: Context): Promise<Response> {
+  static async run({ req, get, json }: Context): Promise<Response> {
+    const body = await req.formData().catch(Error)
+    const customerID = Authenticator.getCustomerID(get)
+
     return new UploadUsecase(
-      new UploadValidator(await c.req.formData()),
-      new UploadPresenter(c),
+      new UploadValidator(body),
+      new UploadPresenter(json),
       new UploadStorer('tmp'),
       new UploadQueuer()
-    ).execute(Authenticator.getCustomerID(c))
+    ).execute(customerID)
   }
 }

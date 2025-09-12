@@ -10,16 +10,26 @@ export interface IUploadValidator {
 
 // Concrete
 export class UploadValidator implements IUploadValidator {
-  constructor(private readonly input: FormData) {}
+  constructor(private readonly input: unknown) {}
 
   parse(): Output {
-    const image = this.input.get('image')
+    try {
+      if (!this.isFormData(this.input)) throw 'Wrong format.'
 
-    if (!this.isFileProvided(image) || !this.isImageType(image) || !this.isSizeUnder10MB(image)) {
+      const image = this.input.get('image')
+
+      if (!this.isFileProvided(image)) throw 'Missing file.'
+      if (!this.isImageType(image)) throw 'Wrong type.'
+      if (!this.isSizeUnder10MB(image)) throw 'Max 10MB.'
+
+      return { success: true, image }
+    } catch {
       return { success: false, error: { message: 'Image Upload input validation failed.' } }
     }
+  }
 
-    return { success: true, image }
+  private isFormData(input: unknown): input is FormData {
+    return input instanceof FormData
   }
 
   private isFileProvided(input: FormDataEntryValue | null): input is File {

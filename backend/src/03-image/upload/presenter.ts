@@ -11,13 +11,13 @@ export interface IUploadPresenter {
 
 // Concrete
 export class UploadPresenter implements IUploadPresenter {
-  constructor(private readonly c: Context) {}
+  constructor(private readonly json: Context['json']) {}
 
   validationFail(error: ApiError): Response {
-    return this.c.json(error, 400)
+    return this.json(error, 400)
   }
 
   success(data: Data): Response {
-    return this.c.json(data, 201)
+    return this.json(data, 201)
   }
 }

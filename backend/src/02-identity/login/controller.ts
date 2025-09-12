@@ -9,11 +9,14 @@ import { LoginValidator } from './validator'
 
 export class LoginController {
   @Transaction()
-  static async run(c: Context): Promise<Response> {
+  static async run({ req, json }: Context): Promise<Response> {
+    const body = await req.json().catch(Error)
+    const tx = getTransaction()
+
     return new LoginUsecase(
-      new LoginValidator(await c.req.json()),
-      new LoginPresenter(c),
-      new LoginRepository(getTransaction()),
+      new LoginValidator(body),
+      new LoginPresenter(json),
+      new LoginRepository(tx),
       new LoginHasher(),
       new LoginTokenizer()
     ).execute()

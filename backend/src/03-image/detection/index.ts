@@ -24,9 +24,9 @@ export class DetectionUsecase {
     const predictions = await this.processor.predict(buffer)
 
     if (!predictions) {
-      return this.presenter.detectionFail({
-        error: { message: 'Fail to detect any subject on the image.' },
-      })
+      await this.storer.deleteLocalImage(tmpPath)
+
+      return this.presenter.detectionFail('fail')
     }
 
     const imageID = await this.repository.createImage({ originalName, internalName, customerID })
@@ -35,6 +35,6 @@ export class DetectionUsecase {
     await this.storer.sendImageToBucket({ internalName, image: buffer })
     await this.storer.deleteLocalImage(tmpPath)
 
-    return this.presenter.success({ data: true })
+    return this.presenter.success('success')
   }
 }

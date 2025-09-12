@@ -22,10 +22,12 @@ type Tensor4D = Tensor<Rank.R4>
 
 export class DetectionProcessor implements IDetectionProcessor {
   async predict(image: Buffer): Promise<Prediction[] | null> {
-    const tensor = node.decodeImage(image, 3)
+    let tensor: Tensor3D | Tensor4D | null = null
 
     try {
-      if (!this.isTensor3D(tensor)) return null
+      tensor = node.decodeImage(image, 3)
+
+      if (!this.isTensor3D(tensor)) throw 'Not Tensor3D.'
 
       const model = DetectionModel.getModel()
       const predictions = await model.detect(tensor)
@@ -40,8 +42,10 @@ export class DetectionProcessor implements IDetectionProcessor {
         classification,
         confidence: this.toPercentage(score),
       }))
+    } catch {
+      return null
     } finally {
-      tensor.dispose()
+      if (tensor) tensor.dispose()
     }
   }
 
