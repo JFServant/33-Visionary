@@ -1,6 +1,7 @@
 import type { GetObjectCommandOutput } from '@aws-sdk/client-s3'
 import {
   CreateBucketCommand,
+  DeleteObjectCommand,
   GetObjectCommand,
   ListBucketsCommand,
   PutObjectCommand,
@@ -12,6 +13,7 @@ export type BucketName = Buckets[number]
 
 type PutObject = { bucket: BucketName; fileName: string; file: Buffer }
 type GetObject = { bucket: BucketName; fileName: string }
+type DeleteObject = { bucket: BucketName; fileName: string }
 
 export class S3Manager {
   private static buckets = ['images', 'test'] satisfies Buckets
@@ -34,5 +36,9 @@ export class S3Manager {
 
   static getObject({ bucket, fileName }: GetObject): Promise<GetObjectCommandOutput> {
     return s3Client.send(new GetObjectCommand({ Bucket: bucket, Key: fileName }))
+  }
+
+  static async deleteObject({ bucket, fileName }: DeleteObject): Promise<void> {
+    await s3Client.send(new DeleteObjectCommand({ Bucket: bucket, Key: fileName }))
   }
 }

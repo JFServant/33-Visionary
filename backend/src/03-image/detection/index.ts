@@ -30,8 +30,8 @@ export class DetectionUsecase {
     }
 
     const imageID = await this.repository.createImage({ originalName, internalName, customerID })
-
     await this.repository.createPredictions(predictions.map((p) => ({ ...p, imageID })))
+
     await this.storer.sendImageToBucket({ internalName, image: buffer })
     await this.storer.deleteLocalImage(tmpPath)
 

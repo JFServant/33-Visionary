@@ -63,6 +63,20 @@ jobs:
           --health-interval=10s
           --health-timeout=5s
           --health-retries=5
+
+      minio:
+        image: minio/minio:latest
+        ports:
+          - "49327:9000"
+        options: >-
+          --entrypoint sh
+          minio/minio:latest
+          -c "minio server /data"
+          --health-cmd="curl -f http://localhost:9000/minio/health/ready || exit 1"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
+
     steps:
       - name: 📥 Checkout Repository
         uses: actions/checkout@v4
@@ -84,13 +98,13 @@ jobs:
         run: bun install
 
       - name: ⚙️ Setup Environment
-        run: bun run env
+        run: bun run env:ci
 
       - name: 🗄️ Apply Test DB Schema
         run: bun run db:push:test
 
       - name: 🧪 Run Integration Tests
-        run: bun test
+        run: bun run test
 
   # ---------------------
   # 3️⃣ Deploy (Dummy)
