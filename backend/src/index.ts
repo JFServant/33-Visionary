@@ -1,7 +1,7 @@
 import type { ServeOptions } from 'bun'
 import { Hono } from 'hono'
 import { cors } from 'hono/cors'
-import { env } from './00-global/env'
+import { env } from './01-infra/env'
 import { DetectionAssigner } from './01-infra/redis/queue/jobs/detection'
 import { S3Manager } from './01-infra/s3/manager'
 import { sseConnection } from './01-infra/sse/connection'

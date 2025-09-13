@@ -1,5 +1,5 @@
 import { defineConfig } from 'drizzle-kit'
-import { env } from '../../00-global/env'
+import { env } from '../../env'
 
 // ts-prune-ignore-next
 export default defineConfig({

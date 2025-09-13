@@ -1,10 +1,8 @@
-import type { ApiError } from '../../../00-global/types'
-
-export type Data = { data: { sub: string; token: string } }
+import type { ApiData, ApiError } from '../../../types'
 
 export interface ILoginPresenter {
   validationFail(error: ApiError): Response
   invalidEmail(error: ApiError): Response
   invalidPassword(error: ApiError): Response
-  success(data: Data): Response
+  success<T>(data: ApiData<T>): Response
 }

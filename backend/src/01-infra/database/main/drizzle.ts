@@ -1,8 +1,8 @@
 import { AsyncLocalStorage } from 'async_hooks'
 import { drizzle } from 'drizzle-orm/node-postgres'
 import { Pool } from 'pg'
-import { env } from '../../00-global/env'
-import type { DrizzleTransaction } from './drizzle.types'
+import type { DrizzleTransaction } from '../../../types'
+import { env } from '../../env'
 
 const pool = new Pool({
   host: env.DB_HOST,

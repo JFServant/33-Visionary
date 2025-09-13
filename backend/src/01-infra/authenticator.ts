@@ -1,7 +1,7 @@
 import type { Context, Next } from 'hono'
 import { sign, verify } from 'hono/jwt'
+import type { ApiError } from '../types'
 import { env } from './env'
-import type { ApiError } from './types'
 
 type Payload = { sub: string }
 type Token = string

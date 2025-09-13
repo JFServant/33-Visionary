@@ -1,5 +1,5 @@
 import { pgTable, serial, text, timestamp } from 'drizzle-orm/pg-core'
-import { nanoid } from '../../../00-global/nanoid'
+import { nanoid } from '../nanoid'
 import { images } from './image'
 
 export const predictions = pgTable('predictions', {

@@ -1,5 +1,5 @@
 import { Hono } from 'hono'
-import { Authenticator } from '../00-global/authenticator'
+import { Authenticator } from '../01-infra/authenticator'
 import { UploadController } from './upload/controller'
 
 export const imageRouter = new Hono()

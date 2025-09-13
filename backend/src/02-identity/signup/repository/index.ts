@@ -1,6 +1,6 @@
 import { eq } from 'drizzle-orm'
-import type { DrizzleTransaction } from '../../../01-infra/database/drizzle.types'
 import { customers } from '../../../01-infra/database/schema/customer'
+import type { DrizzleTransaction } from '../../../types'
 import type { Customer, CustomerID, ISignupRepository } from './contract'
 
 export class SignupRepository implements ISignupRepository {

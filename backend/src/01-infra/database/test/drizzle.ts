@@ -1,6 +1,6 @@
 import { drizzle } from 'drizzle-orm/node-postgres'
 import { Pool } from 'pg'
-import type { DrizzleTransaction } from './drizzle.types'
+import type { DrizzleTransaction } from '../../../types'
 
 const pool = new Pool({
   host: 'localhost',

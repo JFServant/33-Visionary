@@ -19,11 +19,11 @@ export class UploadUsecase {
     }
 
     const { tmpPath, internalName } = await this.storer.saveToDisk({
-      image: validation.image,
+      image: validation.data,
       customerID,
     })
 
-    const { name } = validation.image
+    const { name } = validation.data
 
     await this.queuer.detection({
       tmpPath,

@@ -1,12 +1,10 @@
 import type { Context } from 'hono'
-import type { ApiError } from '../../00-global/types'
+import type { ApiData, ApiError } from '../../types'
 
 // Contract
-type Data = { data: true }
-
 export interface IUploadPresenter {
   validationFail(error: ApiError): Response
-  success(data: Data): Response
+  success<T>(data: ApiData<T>): Response
 }
 
 // Concrete
@@ -17,7 +15,7 @@ export class UploadPresenter implements IUploadPresenter {
     return this.json(error, 400)
   }
 
-  success(data: Data): Response {
+  success<T>(data: ApiData<T>): Response {
     return this.json(data, 201)
   }
 }

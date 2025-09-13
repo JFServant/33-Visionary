@@ -1,6 +1,6 @@
 import type { Context } from 'hono'
 import { UploadUsecase } from '.'
-import { Authenticator } from '../../00-global/authenticator'
+import { Authenticator } from '../../01-infra/authenticator'
 import { UploadPresenter } from './presenter'
 import { UploadQueuer } from './queuer'
 import { UploadStorer } from './storer'

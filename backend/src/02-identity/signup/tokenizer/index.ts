@@ -1,4 +1,4 @@
-import { Authenticator } from '../../../00-global/authenticator'
+import { Authenticator } from '../../../01-infra/authenticator'
 import type { ISignupTokenizer, Token } from './contract'
 
 export class SignupTokenizer implements ISignupTokenizer {

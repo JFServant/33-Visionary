@@ -2,7 +2,6 @@ import { afterEach, describe, expect, it, mock } from 'bun:test'
 import { readdirSync, readFileSync, unlinkSync } from 'fs'
 import { join } from 'path'
 import { UploadUsecase } from '.'
-import { nanoid } from '../../00-global/nanoid'
 import type { IUploadPresenter } from './presenter'
 import type { IUploadQueuer } from './queuer'
 import { UploadStorer } from './storer'
@@ -16,11 +15,11 @@ const factory = async ({ input, presenter, queuer }: FactoryConfig): Promise<voi
     presenter,
     new UploadStorer('tmp-test'),
     queuer
-  ).execute(nanoid())
+  ).execute('customerID')
 }
 
 type FileBuilderConfig = {
-  name: 'dog.jpg' | 'text.jpg'
+  name: 'dog.jpg' | 'text.txt'
   type: 'image/jpeg' | 'text/plain'
 }
 
@@ -39,7 +38,7 @@ const fileBuilder = ({ name, type }: FileBuilderConfig): FormData => {
 const fileCleaner = (): void => {
   const folder = join(__dirname, 'tmp-test')
   const files = readdirSync(folder)
-  const filesToDelete = files.filter((file) => file !== 'dog.jpg' && file !== 'text.jpg')
+  const filesToDelete = files.filter((file) => file !== 'dog.jpg' && file !== 'text.txt')
 
   for (const file of filesToDelete) unlinkSync(join(folder, file))
 }
@@ -55,7 +54,7 @@ describe('UploadUsecase', () => {
   }
 
   const VALID_INPUT = fileBuilder({ name: 'dog.jpg', type: 'image/jpeg' })
-  const INVALID_INPUT = fileBuilder({ name: 'text.jpg', type: 'text/plain' })
+  const INVALID_INPUT = fileBuilder({ name: 'text.txt', type: 'text/plain' })
 
   afterEach(() => {
     mock.clearAllMocks()

@@ -1,6 +1,6 @@
-import type { DrizzleTransaction } from '../../01-infra/database/drizzle.types'
 import { images } from '../../01-infra/database/schema/image'
 import { predictions } from '../../01-infra/database/schema/prediction'
+import type { DrizzleTransaction } from '../../types'
 
 // Contract
 type Image = {

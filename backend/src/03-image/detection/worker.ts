@@ -1,6 +1,6 @@
 import type { Job } from 'bullmq'
 import { DetectionUsecase } from '.'
-import { getTransaction, Transaction } from '../../01-infra/database/drizzle'
+import { getTransaction, Transaction } from '../../01-infra/database/main/drizzle'
 import type { DetectionPayload } from '../../01-infra/redis/queue/jobs/detection'
 import { DetectionPresenter } from './presenter'
 import { DetectionProcessor } from './processor'

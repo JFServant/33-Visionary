@@ -1,5 +1,5 @@
 import { pgTable, serial, text, timestamp } from 'drizzle-orm/pg-core'
-import { nanoid } from '../../../00-global/nanoid'
+import { nanoid } from '../nanoid'
 import { customers } from './customer'
 
 export const images = pgTable('images', {

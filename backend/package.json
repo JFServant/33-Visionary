@@ -4,7 +4,7 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "setup": "bun install && bun run env:local && bun run docker:up && bun run db:push && bun run db:push:test",
+    "setup": "bun install && bun run env:local && bun run docker:up && bun run db:push:main && bun run db:push:test",
     "start": "bun run src/index.ts",
     "dev": "bun run --hot src/index.ts",
     "prune": "ts-prune -e",
@@ -17,9 +17,9 @@
     "docker:up": "docker compose up -d",
     "docker:down": "docker compose down",
     "docker:clean": "docker compose down -v --remove-orphans",
-    "db:generate": "bun run drizzle-kit generate --config=src/01-infra/database/drizzle.config.ts",
-    "db:push": "bun run drizzle-kit push --config=src/01-infra/database/drizzle.config.ts",
-    "db:push:test": "bun run drizzle-kit push --config=src/01-infra/database/test.drizzle.config.ts"
+    "db:generate": "bun run drizzle-kit generate --config=src/01-infra/database/main/drizzle.config.ts",
+    "db:push:main": "bun run drizzle-kit push --config=src/01-infra/database/main/drizzle.config.ts",
+    "db:push:test": "bun run drizzle-kit push --config=src/01-infra/database/test/drizzle.config.ts"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.886.0",

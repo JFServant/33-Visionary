@@ -1,6 +1,6 @@
 import type { Context } from 'hono'
 import { SignupUsecase } from '.'
-import { getTransaction, Transaction } from '../../01-infra/database/drizzle'
+import { getTransaction, Transaction } from '../../01-infra/database/main/drizzle'
 import { SignupHasher } from './hasher'
 import { SignupPresenter } from './presenter'
 import { SignupRepository } from './repository'

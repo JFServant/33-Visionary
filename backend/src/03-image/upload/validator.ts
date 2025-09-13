@@ -1,18 +1,17 @@
-import type { ValidationFail } from '../../00-global/types'
+import type { ValidationFail, ValidationSuccess } from '../../types'
 
 // Contract
-type ValidationSuccess = { success: true; image: File }
-type Output = ValidationSuccess | ValidationFail
+type Validation = ValidationSuccess<File> | ValidationFail
 
 export interface IUploadValidator {
-  parse(): Output
+  parse(): Validation
 }
 
 // Concrete
 export class UploadValidator implements IUploadValidator {
   constructor(private readonly input: unknown) {}
 
-  parse(): Output {
+  parse(): Validation {
     try {
       if (!this.isFormData(this.input)) throw 'Wrong format.'
 
@@ -22,7 +21,7 @@ export class UploadValidator implements IUploadValidator {
       if (!this.isImageType(image)) throw 'Wrong type.'
       if (!this.isSizeUnder10MB(image)) throw 'Max 10MB.'
 
-      return { success: true, image }
+      return { success: true, data: image }
     } catch {
       return { success: false, error: { message: 'Image Upload input validation failed.' } }
     }

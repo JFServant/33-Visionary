@@ -1,5 +1,5 @@
 import type { Context } from 'hono'
-import type { ApiError } from '../../00-global/types'
+import type { ApiError } from '../../types'
 import { SSEManager } from './manager'
 
 export const sseConnection = ({ req, json }: Context): Response => {
