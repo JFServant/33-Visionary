@@ -1,6 +1,6 @@
 import type { JSX } from 'react'
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router'
-import GuardScreen from './00-global/guard/screen'
+import GuardScreen from './01-network/guard/screen'
 import LoginComponent from './02-identity/login/component'
 import IdentityScreen from './02-identity/screen'
 import SignupComponent from './02-identity/signup/component'

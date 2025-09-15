@@ -9,8 +9,8 @@ import {
 import { Box, List, ListItemButton, ListItemIcon, ListItemText, Typography } from '@mui/material'
 import type { JSX } from 'react'
 import { Navigate, NavLink, Outlet, useNavigate } from 'react-router'
-import VisionaryDivider from '../../01-design/visionary-divider'
-import VisionaryTitle from '../../01-design/visionary-title'
+import Divider from '../../99-design/divider'
+import Title from '../../99-design/title'
 import { Storer } from '../storer'
 import { contentSX, footerSX, headerSX, itemSX, listSX, mainSX, menuSX, screenSX } from './style'
 
@@ -37,7 +37,7 @@ const GuardScreen = (): JSX.Element => {
   return (
     <Box component="div" sx={screenSX}>
       <Box component="header" sx={headerSX}>
-        <VisionaryTitle />
+        <Title />
       </Box>
       <Box component="div" sx={contentSX}>
         <Box component="nav" sx={menuSX}>
@@ -56,7 +56,7 @@ const GuardScreen = (): JSX.Element => {
             </ListItemButton>
           </List>
         </Box>
-        <VisionaryDivider direction="to top" />
+        <Divider direction="to top" />
         <Box component="main" sx={mainSX}>
           <Outlet />
         </Box>

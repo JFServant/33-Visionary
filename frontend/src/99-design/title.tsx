@@ -16,7 +16,7 @@ const SX = sx(({ weight, palette, precision }) => ({
   marginLeft: `-${precision[2]}`,
 }))
 
-const VisionaryTitle = (): JSX.Element => (
+const Title = (): JSX.Element => (
   <Box component="div">
     <Typography component="h1" variant="h4" sx={SX}>
       Visionary
@@ -24,4 +24,4 @@ const VisionaryTitle = (): JSX.Element => (
   </Box>
 )
 
-export default VisionaryTitle
+export default Title

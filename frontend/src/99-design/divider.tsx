@@ -11,8 +11,8 @@ const SX = (direction: Direction): SxProps<Theme> =>
     background: `linear-gradient(${direction}, ${palette.primary.main}, ${palette.secondary.main})`,
   }))
 
-const VisionaryDivider = ({ direction }: { direction: Direction }): JSX.Element => (
+const Divider = ({ direction }: { direction: Direction }): JSX.Element => (
   <Box component="hr" sx={SX(direction)}></Box>
 )
 
-export default VisionaryDivider
+export default Divider
