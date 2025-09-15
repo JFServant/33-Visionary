@@ -15,10 +15,6 @@ export const h2SX = sx(({ size, precision }) => ({
   marginBottom: size[1],
 }))
 
-export const buttonSX = sx(({ weight }) => ({
-  fontWeight: weight[6],
-}))
-
 export const linkSX = sx(() => ({
   marginTop: 'auto',
 }))

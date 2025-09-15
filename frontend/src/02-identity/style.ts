@@ -20,4 +20,5 @@ export const mainSX = sx(({ shadows, shape, size }) => ({
 export const outletSX = sx(() => ({
   flex: 1,
   display: 'flex',
+  overflow: 'hidden',
 }))

@@ -35,4 +35,20 @@ export const theme = createTheme({
     5: 500,
     6: 600,
   },
+  components: {
+    MuiButton: {
+      styleOverrides: {
+        contained: {
+          fontWeight: 600,
+        },
+      },
+    },
+    MuiListItemText: {
+      styleOverrides: {
+        primary: {
+          fontWeight: 600,
+        },
+      },
+    },
+  },
 })

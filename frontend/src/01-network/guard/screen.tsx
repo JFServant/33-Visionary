@@ -1,32 +1,45 @@
+import { ListRounded, LogoutRounded, UploadFileRounded } from '@mui/icons-material'
 import {
-  DashboardRounded,
-  HelpRounded,
-  HistoryRounded,
-  LogoutRounded,
-  SettingsRounded,
-  UploadFileRounded,
-} from '@mui/icons-material'
-import { Box, List, ListItemButton, ListItemIcon, ListItemText, Typography } from '@mui/material'
-import type { JSX } from 'react'
-import { Navigate, NavLink, Outlet, useNavigate } from 'react-router'
+  Box,
+  Button,
+  Grow,
+  List,
+  ListItem,
+  ListItemButton,
+  ListItemIcon,
+  ListItemText,
+  Typography,
+} from '@mui/material'
+import { useEffect, type JSX } from 'react'
+import { NavLink, Outlet, useNavigate } from 'react-router'
 import Divider from '../../99-design/divider'
 import Title from '../../99-design/title'
 import { Storer } from '../storer'
-import { contentSX, footerSX, headerSX, itemSX, listSX, mainSX, menuSX, screenSX } from './style'
+import {
+  articleSX,
+  containerSX,
+  iconSX,
+  itemSX,
+  legendSX,
+  listSX,
+  mainSX,
+  navSX,
+  screenSX,
+  sectionSX,
+} from './style'
 
-const menuItems = [
-  { label: 'Dashboard', icon: <DashboardRounded />, path: '#' },
-  { label: 'Upload', icon: <UploadFileRounded />, path: '/image/upload' },
-  { label: 'History', icon: <HistoryRounded />, path: '#' },
-  { label: 'Settings', icon: <SettingsRounded />, path: '#' },
-  { label: 'Help', icon: <HelpRounded />, path: '#' },
+const items = [
+  { label: 'Upload', path: '#', icon: <UploadFileRounded /> },
+  { label: 'Listing', path: '#', icon: <ListRounded /> },
 ]
 
 const GuardScreen = (): JSX.Element => {
   const navigate = useNavigate()
   const token = Storer.get('token')
 
-  if (!token) return <Navigate to="/identity" replace />
+  useEffect(() => {
+    if (!token) navigate('/identity', { replace: true })
+  }, [token, navigate])
 
   const onClick = (): void => {
     Storer.remove('sub')
@@ -36,36 +49,37 @@ const GuardScreen = (): JSX.Element => {
 
   return (
     <Box component="div" sx={screenSX}>
-      <Box component="header" sx={headerSX}>
-        <Title />
-      </Box>
-      <Box component="div" sx={contentSX}>
-        <Box component="nav" sx={menuSX}>
-          <List sx={listSX}>
-            {menuItems.map(({ label, path, icon }) => (
-              <ListItemButton key={label} component={NavLink} to={path} sx={itemSX}>
-                <ListItemIcon>{icon}</ListItemIcon>
-                <ListItemText primary={label} />
-              </ListItemButton>
-            ))}
-            <ListItemButton component="button" onClick={onClick} sx={itemSX}>
-              <ListItemIcon>
-                <LogoutRounded />
-              </ListItemIcon>
-              <ListItemText primary="Log out" />
-            </ListItemButton>
-          </List>
-        </Box>
-        <Divider direction="to top" />
+      <Grow in>
         <Box component="main" sx={mainSX}>
-          <Outlet />
+          <Box component="article" sx={articleSX}>
+            <Title />
+            <Box component="div" sx={containerSX}>
+              <Box component="nav" sx={navSX}>
+                <Typography component="p" variant="overline" sx={legendSX}>
+                  Image
+                </Typography>
+                <List sx={listSX}>
+                  {items.map(({ label, path, icon }) => (
+                    <ListItem key={label} disablePadding dense>
+                      <ListItemButton component={NavLink} to={path} sx={itemSX}>
+                        <ListItemIcon sx={iconSX}>{icon}</ListItemIcon>
+                        <ListItemText primary={label} />
+                      </ListItemButton>
+                    </ListItem>
+                  ))}
+                </List>
+              </Box>
+            </Box>
+            <Button variant="contained" startIcon={<LogoutRounded />} onClick={onClick}>
+              Log out
+            </Button>
+          </Box>
+          <Divider direction="to top" />
+          <Box component="section" sx={sectionSX}>
+            <Outlet />
+          </Box>
         </Box>
-      </Box>
-      <Box component="footer" sx={footerSX}>
-        <Typography component="p" variant="caption">
-          &copy; {new Date().getFullYear()} Visionary. All rights reserved.
-        </Typography>
-      </Box>
+      </Grow>
     </Box>
   )
 }

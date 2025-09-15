@@ -1,63 +1,65 @@
 import { sx } from '../../99-design/theme'
 
 export const screenSX = sx(() => ({
+  display: 'flex',
   height: '100vh',
-  display: 'flex',
-  flexDirection: 'column',
 }))
 
-export const headerSX = sx(({ size, shadows }) => ({
-  padding: `${size[1]} ${size[2]}`,
-  boxShadow: shadows[3],
-}))
-
-export const contentSX = sx(() => ({
-  flex: 1,
+export const mainSX = sx(({ shape, shadows, size }) => ({
+  borderRadius: shape.borderRadius,
+  boxShadow: shadows[15],
   display: 'flex',
-}))
-
-export const menuSX = sx(({ palette }) => ({
-  width: '16rem',
-  display: 'flex',
-  backgroundColor: palette.background.paper,
-}))
-
-export const listSX = sx(({ size, palette, shadows }) => ({
-  flex: 1,
-  display: 'flex',
-  flexDirection: 'column',
-  gap: size[1],
-  backgroundColor: palette.background.default,
-  boxShadow: shadows[1],
+  height: '40rem',
+  margin: 'auto',
   padding: size[2],
-  margin: size[1],
-  borderRadius: size[1],
+  width: '56rem',
 }))
 
-export const itemSX = sx(({ size, precision, palette, weight }) => ({
-  flex: 0,
-  height: size[4],
-  border: `${precision[1]} solid ${palette.primary.main}`,
-  borderRadius: size[1],
-
-  ':last-child': {
-    marginTop: 'auto',
-  },
-
-  '.MuiListItemIcon-root, .MuiListItemText-primary': {
-    color: palette.primary.main,
-    fontWeight: weight[6],
-  },
+export const articleSX = sx(({ size }) => ({
+  display: 'flex',
+  flexDirection: 'column',
+  marginRight: size[2],
+  width: '14rem',
 }))
 
-export const mainSX = sx(() => ({
+export const containerSX = sx(({ precision, palette, size }) => ({
+  borderBottom: `${precision[1]} solid ${palette.primary.light}`,
+  borderTop: `${precision[1]} solid ${palette.primary.light}`,
+  display: 'flex',
   flex: 1,
-  display: 'flex',
+  margin: `${size[1]} 0 ${size[2]}`,
 }))
 
-export const footerSX = sx(({ size, shadows }) => ({
+export const navSX = sx(({ palette, shape, shadows, size }) => ({
+  backgroundColor: palette.background.paper,
+  borderRadius: shape.borderRadius,
+  boxShadow: `inset ${shadows[1]}`,
   display: 'flex',
-  justifyContent: 'center',
-  padding: `${size[2]} 0`,
-  boxShadow: shadows[6],
+  flex: 1,
+  flexDirection: 'column',
+  margin: `${size[2]} 0`,
+}))
+
+export const legendSX = sx(({ precision, palette, size }) => ({
+  borderBottom: `${precision[1]} solid ${palette.primary.light}`,
+  color: palette.primary.light,
+  margin: `0 ${size[2]}`,
+  padding: `${size[1]} ${size[1]} 0 ${size[1]}`,
+}))
+
+export const listSX = sx(({ precision }) => ({
+  display: 'flex',
+  flex: 1,
+  flexDirection: 'column',
+  gap: precision[2],
+}))
+
+export const itemSX = sx(({ palette }) => ({ color: palette.primary.main }))
+
+export const iconSX = sx(({ palette }) => ({ color: palette.primary.main }))
+
+export const sectionSX = sx(({ size }) => ({
+  display: 'flex',
+  flex: 1,
+  marginLeft: size[2],
 }))
