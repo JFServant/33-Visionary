@@ -2,27 +2,27 @@ import { SSEManager } from '../../01-infra/sse/manager'
 
 // Contract
 export interface IDetectionPresenter {
-  success(data: string): Promise<void>
-  detectionFail(error: string): Promise<void>
+  success(message: 'success'): Promise<void>
+  detectionFail(message: 'failure'): Promise<void>
 }
 
 // Concrete
 export class DetectionPresenter implements IDetectionPresenter {
   constructor(private readonly customerID: string) {}
 
-  async success(data: string): Promise<void> {
+  async success(message: 'success'): Promise<void> {
     await SSEManager.write({
       customerID: this.customerID,
       event: 'detection',
-      message: data,
+      message,
     })
   }
 
-  async detectionFail(error: string): Promise<void> {
+  async detectionFail(message: 'failure'): Promise<void> {
     await SSEManager.write({
       customerID: this.customerID,
       event: 'detection',
-      message: error,
+      message,
     })
   }
 }

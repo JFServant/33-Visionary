@@ -1,8 +1,9 @@
 type Event = 'detection'
+type Message = 'success' | 'failure'
 
 type CustomerID = string
 type Connect = { customerID: string; writer: WritableStreamDefaultWriter }
-type Write = { customerID: string; event: Event; message: string }
+type Write = { customerID: string; event: Event; message: Message }
 
 export class SSEManager {
   private static connections = new Map<CustomerID, WritableStreamDefaultWriter>()
@@ -25,7 +26,7 @@ export class SSEManager {
   static heartbeat(): void {
     setInterval(async () => {
       for (const [, writer] of Array.from(this.connections)) {
-        await writer.write(`: heartbeat\n\n`).catch()
+        await writer.write(`: heartbeat\n\n`).catch(Error)
       }
     }, 15_000)
   }

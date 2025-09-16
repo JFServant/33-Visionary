@@ -54,7 +54,7 @@ describe('DetectionUsecase', async () => {
         fileName: INVALID_INPUT,
       })
 
-      expect(MockedDetectionPresenter.detectionFail).toHaveBeenCalledWith('fail')
+      expect(MockedDetectionPresenter.detectionFail).toHaveBeenCalledWith('failure')
     })
   })
 })

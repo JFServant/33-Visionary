@@ -26,7 +26,7 @@ export class DetectionUsecase {
     if (!predictions) {
       await this.storer.deleteLocalImage(tmpPath)
 
-      return this.presenter.detectionFail('fail')
+      return this.presenter.detectionFail('failure')
     }
 
     const imageID = await this.repository.createImage({ originalName, internalName, customerID })
