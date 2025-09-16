@@ -54,7 +54,10 @@ export const listSX = sx(({ precision }) => ({
   gap: precision[2],
 }))
 
-export const itemSX = sx(({ palette }) => ({ color: palette.primary.main }))
+export const itemSX = sx(({ palette }) => ({
+  '&.active': { backgroundColor: palette.background.default },
+  color: palette.primary.main,
+}))
 
 export const iconSX = sx(({ palette }) => ({ color: palette.primary.main }))
 

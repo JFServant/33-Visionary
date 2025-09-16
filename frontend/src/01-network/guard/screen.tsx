@@ -29,8 +29,8 @@ import {
 } from './style'
 
 const items = [
-  { label: 'Upload', path: '#', icon: <UploadFileRounded /> },
-  { label: 'Listing', path: '#', icon: <ListRounded /> },
+  { label: 'Listing', path: '/image/listing', icon: <ListRounded /> },
+  { label: 'Upload', path: '/image/upload', icon: <UploadFileRounded /> },
 ]
 
 const GuardScreen = (): JSX.Element => {

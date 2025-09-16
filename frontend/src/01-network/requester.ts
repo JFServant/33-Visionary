@@ -12,6 +12,8 @@ type ApiError = { error: { message: string } }
 
 type Request<T> = (options: Options) => Promise<T | ApiError>
 
+const isFormData = (body: unknown): body is FormData => body instanceof FormData
+
 export const useRequest = <T>(): Request<T> => {
   const navigate = useNavigate()
 
@@ -23,9 +25,9 @@ export const useRequest = <T>(): Request<T> => {
         method,
         headers: {
           ...(token ? { Authorization: `Bearer ${token}` } : {}),
-          ...(body ? { 'Content-Type': 'application/json' } : {}),
+          ...(body && !isFormData(body) ? { 'Content-Type': 'application/json' } : {}),
         },
-        ...(body ? { body: JSON.stringify(body) } : {}),
+        ...(body ? (!isFormData(body) ? { body: JSON.stringify(body) } : { body }) : {}),
       })
 
       if (res.status === 401) {
