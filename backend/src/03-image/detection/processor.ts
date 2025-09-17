@@ -4,12 +4,12 @@ import { DetectionModel } from './model'
 
 // Contract
 type Prediction = {
-  x: string
-  y: string
-  width: string
-  height: string
+  x: number
+  y: number
+  width: number
+  height: number
   classification: string
-  confidence: string
+  confidence: number
 }
 
 export interface IDetectionProcessor {
@@ -35,12 +35,12 @@ export class DetectionProcessor implements IDetectionProcessor {
       const [height, width] = tensor.shape
 
       return predictions.map(({ bbox: [x1, y1, x2, y2], class: classification, score }) => ({
-        x: this.toPercentage(x1 / width),
-        y: this.toPercentage(y1 / height),
-        width: this.toPercentage((x2 - x1) / width),
-        height: this.toPercentage((y2 - y1) / height),
+        x: this.normalize(x1 / width),
+        y: this.normalize(y1 / height),
+        width: this.normalize((x2 - x1) / width),
+        height: this.normalize((y2 - y1) / height),
         classification,
-        confidence: this.toPercentage(score),
+        confidence: this.normalize(score),
       }))
     } catch {
       return null
@@ -53,7 +53,7 @@ export class DetectionProcessor implements IDetectionProcessor {
     return tensor.rank === 3
   }
 
-  private toPercentage(num: number): string {
-    return `${Math.round(num * 100)}%`
+  private normalize(num: number): number {
+    return Math.round(num * 100) / 100
   }
 }

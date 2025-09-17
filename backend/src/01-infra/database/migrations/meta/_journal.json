@@ -15,6 +15,13 @@
       "when": 1757684074960,
       "tag": "0001_curvy_harrier",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1758110493154,
+      "tag": "0002_outstanding_stature",
+      "breakpoints": true
     }
   ]
 }

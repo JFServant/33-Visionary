@@ -12,12 +12,12 @@ type Image = {
 type ImageID = string
 
 type Prediction = {
-  x: string
-  y: string
-  width: string
-  height: string
+  x: number
+  y: number
+  width: number
+  height: number
   classification: string
-  confidence: string
+  confidence: number
   imageID: string
 }
 
