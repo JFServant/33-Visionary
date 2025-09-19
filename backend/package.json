@@ -7,7 +7,7 @@
     "setup": "bun install && bun run env:local && bun run docker:up && bun run db:push:main && bun run db:push:test",
     "start": "bun run src/index.ts",
     "dev": "bun run --hot src/index.ts",
-    "prune": "ts-prune -e",
+    "prune": "ts-prune -e -i src/01-infra/database/schema/index.ts",
     "lint": "eslint --fix .",
     "format": "prettier --write . --log-level error",
     "preflight": "bun run tsc && bun run prune && bun run lint && bun run format",
@@ -22,7 +22,8 @@
     "db:push:test": "bun run drizzle-kit push --config=src/01-infra/database/test/drizzle.config.ts"
   },
   "dependencies": {
-    "@aws-sdk/client-s3": "^3.886.0",
+    "@aws-sdk/client-s3": "^3.891.0",
+    "@aws-sdk/s3-request-presigner": "^3.891.0",
     "@tensorflow-models/coco-ssd": "^2.2.3",
     "@tensorflow/tfjs-node": "^4.22.0",
     "argon2": "^0.44.0",

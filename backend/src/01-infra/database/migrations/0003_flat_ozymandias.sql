@@ -1,0 +1,1 @@
+CREATE INDEX "image_id_idx" ON "predictions" USING btree ("image_id");

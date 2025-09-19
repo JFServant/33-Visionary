@@ -19,6 +19,8 @@ const schema = z.object({
   S3_REGION: z.string().trim().nonempty(),
   S3_ACCESS_KEY: z.string().trim().nonempty(),
   S3_SECRET_KEY: z.string().trim().nonempty(),
+
+  RUN_ENV: z.literal(['production', 'staging', 'local']),
 })
 
 export const env = schema.parse(process.env)

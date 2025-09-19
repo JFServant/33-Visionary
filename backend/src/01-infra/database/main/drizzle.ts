@@ -3,6 +3,7 @@ import { drizzle } from 'drizzle-orm/node-postgres'
 import { Pool } from 'pg'
 import type { DrizzleTransaction } from '../../../types'
 import { env } from '../../env'
+import * as schema from '../schema'
 
 const pool = new Pool({
   host: env.DB_HOST,
@@ -12,7 +13,8 @@ const pool = new Pool({
   password: env.DB_PASSWORD,
 })
 
-const db = drizzle({ client: pool })
+const client = drizzle({ client: pool, schema })
+export type DrizzleClient = typeof client
 
 const als = new AsyncLocalStorage<DrizzleTransaction>()
 
@@ -24,7 +26,7 @@ export const Transaction =
     const originalMethod = descriptor.value
 
     descriptor.value = function (...args: unknown[]): Promise<unknown> {
-      return db.transaction((tx: DrizzleTransaction) =>
+      return client.transaction((tx: DrizzleTransaction) =>
         als.run(tx, () => originalMethod.apply(this, args))
       )
     }

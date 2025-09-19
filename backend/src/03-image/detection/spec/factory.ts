@@ -3,6 +3,7 @@ import { join } from 'path'
 import { DetectionUsecase } from '..'
 import { customers } from '../../../01-infra/database/schema/customer'
 import type { DrizzleTransaction } from '../../../types'
+import { DetectionMemory } from '../memory'
 import type { IDetectionPresenter } from '../presenter'
 import { DetectionProcessor } from '../processor'
 import { DetectionRepository } from '../repository'
@@ -40,7 +41,8 @@ export const factory = async ({
     new DetectionStorer('test'),
     new DetectionProcessor(),
     presenter,
-    new DetectionRepository(tx)
+    new DetectionRepository(tx),
+    new DetectionMemory('test')
   ).execute({ tmpPath, originalName: fileName, internalName: tmpFileName, customerID })
 
   return { customerID, tmpFileName }

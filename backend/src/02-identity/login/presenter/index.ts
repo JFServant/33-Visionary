@@ -1,23 +1,23 @@
 import type { Context } from 'hono'
-import type { ApiData, ApiError } from '../../../types'
+import type { Failure, Success } from '../../../types'
 import type { ILoginPresenter } from './contract'
 
 export class LoginPresenter implements ILoginPresenter {
   constructor(private readonly json: Context['json']) {}
 
-  validationFail(error: ApiError): Response {
+  validationFail(error: Failure): Response {
     return this.json(error, 400)
   }
 
-  invalidEmail(error: ApiError): Response {
+  invalidEmail(error: Failure): Response {
     return this.json(error, 400)
   }
 
-  invalidPassword(error: ApiError): Response {
+  invalidPassword(error: Failure): Response {
     return this.json(error, 400)
   }
 
-  success<T>(data: ApiData<T>): Response {
+  success<T>(data: Success<T>): Response {
     return this.json(data, 200)
   }
 }

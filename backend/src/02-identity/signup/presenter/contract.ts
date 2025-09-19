@@ -1,7 +1,7 @@
-import type { ApiData, ApiError } from '../../../types'
+import type { Failure, Success } from '../../../types'
 
 export interface ISignupPresenter {
-  validationFail(error: ApiError): Response
-  emailAlreadyTaken(error: ApiError): Response
-  success<T>(data: ApiData<T>): Response
+  validationFail(error: Failure): Response
+  emailAlreadyTaken(error: Failure): Response
+  success<T>(data: Success<T>): Response
 }

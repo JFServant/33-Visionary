@@ -77,6 +77,19 @@ jobs:
           --health-timeout=5s
           --health-retries=5
 
+      redis:
+        image: redis:8
+        ports:
+          - "49325:6379"
+        options: >-
+          --entrypoint sh
+          redis:8
+          -c "redis-server --requirepass redis_pass"
+          --health-cmd="redis-cli -a redis_pass ping"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
+
     steps:
       - name: 📥 Checkout Repository
         uses: actions/checkout@v4

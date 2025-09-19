@@ -1,6 +1,8 @@
+import { relations } from 'drizzle-orm'
 import { pgTable, serial, text, timestamp } from 'drizzle-orm/pg-core'
 import { nanoid } from '../nanoid'
 import { customers } from './customer'
+import { predictions } from './prediction'
 
 export const images = pgTable('images', {
   _id: serial('_id').primaryKey(),
@@ -13,3 +15,7 @@ export const images = pgTable('images', {
     .notNull()
     .references(() => customers.id),
 })
+
+export const imagesRelations = relations(images, ({ many }) => ({
+  predictions: many(predictions),
+}))

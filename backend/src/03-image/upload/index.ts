@@ -14,8 +14,8 @@ export class UploadUsecase {
   async execute(customerID: string): Promise<Response> {
     const validation = this.validator.parse()
 
-    if (!validation.success) {
-      return this.presenter.validationFail({ error: validation.error })
+    if ('error' in validation) {
+      return this.presenter.validationFail(validation)
     }
 
     const { tmpPath, internalName } = await this.storer.saveToDisk({

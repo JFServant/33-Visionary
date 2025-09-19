@@ -1,8 +1,8 @@
-import type { ApiData, ApiError } from '../../../types'
+import type { Failure, Success } from '../../../types'
 
 export interface ILoginPresenter {
-  validationFail(error: ApiError): Response
-  invalidEmail(error: ApiError): Response
-  invalidPassword(error: ApiError): Response
-  success<T>(data: ApiData<T>): Response
+  validationFail(error: Failure): Response
+  invalidEmail(error: Failure): Response
+  invalidPassword(error: Failure): Response
+  success<T>(data: Success<T>): Response
 }

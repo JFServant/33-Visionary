@@ -1,6 +1,6 @@
 import type { Context, Next } from 'hono'
 import { sign, verify } from 'hono/jwt'
-import type { ApiError } from '../types'
+import type { Failure } from '../types'
 import { env } from './env'
 
 type Payload = { sub: string }
@@ -27,7 +27,7 @@ export class Authenticator {
 
       return next()
     } catch {
-      return json({ error: { message: 'Unauthorized.' } } satisfies ApiError, 401)
+      return json({ error: { message: 'Unauthorized.' } } satisfies Failure, 401)
     }
   }
 

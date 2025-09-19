@@ -1,12 +1,12 @@
 import type { Context } from 'hono'
-import type { ApiError } from '../../types'
+import type { Failure } from '../../types'
 import { SSEManager } from './manager'
 
 export const sseConnection = ({ req, json }: Context): Response => {
   const customerID = req.param('customerID')
 
   if (!customerID) {
-    return json({ error: { message: 'Connection failed.' } } satisfies ApiError, 400)
+    return json({ error: { message: 'Connection failed.' } } satisfies Failure, 400)
   }
 
   const { writable, readable } = new TextEncoderStream()

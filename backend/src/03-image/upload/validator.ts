@@ -1,7 +1,7 @@
-import type { ValidationFail, ValidationSuccess } from '../../types'
+import type { Failure, Success } from '../../types'
 
 // Contract
-type Validation = ValidationSuccess<File> | ValidationFail
+type Validation = Success<File> | Failure
 
 export interface IUploadValidator {
   parse(): Validation
@@ -21,9 +21,9 @@ export class UploadValidator implements IUploadValidator {
       if (!this.isImageType(image)) throw 'Wrong type.'
       if (!this.isSizeUnder10MB(image)) throw 'Max 10MB.'
 
-      return { success: true, data: image }
+      return { data: image }
     } catch {
-      return { success: false, error: { message: 'Image Upload input validation failed.' } }
+      return { error: { message: 'Image Upload input validation failed.' } }
     }
   }
 

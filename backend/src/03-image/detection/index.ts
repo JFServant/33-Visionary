@@ -1,3 +1,4 @@
+import type { IDetectionMemory } from './memory'
 import type { IDetectionPresenter } from './presenter'
 import type { IDetectionProcessor } from './processor'
 import type { IDetectionRepository } from './repository'
@@ -15,7 +16,8 @@ export class DetectionUsecase {
     private readonly storer: IDetectionStorer,
     private readonly processor: IDetectionProcessor,
     private readonly presenter: IDetectionPresenter,
-    private readonly repository: IDetectionRepository
+    private readonly repository: IDetectionRepository,
+    private readonly memory: IDetectionMemory
   ) {}
 
   async execute({ tmpPath, originalName, internalName, customerID }: Input): Promise<void> {
@@ -34,6 +36,8 @@ export class DetectionUsecase {
 
     await this.storer.sendImageToBucket({ internalName, image: buffer })
     await this.storer.deleteLocalImage(tmpPath)
+
+    await this.memory.clearImages(customerID)
 
     return this.presenter.success('success')
   }
