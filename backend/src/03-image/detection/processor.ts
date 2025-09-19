@@ -27,10 +27,12 @@ export class DetectionProcessor implements IDetectionProcessor {
     try {
       tensor = node.decodeImage(image, 3)
 
-      if (!this.isTensor3D(tensor)) throw 'Not Tensor3D.'
+      if (!this.isTensor3D(tensor)) return null
 
       const model = await DetectionModel.getModel()
       const predictions = await model.detect(tensor)
+
+      if (!predictions.length) return null
 
       const [height, width] = tensor.shape
 
