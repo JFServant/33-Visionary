@@ -9,11 +9,10 @@ import {
   Typography,
   type AlertProps,
 } from '@mui/material'
-import { useState, type ChangeEvent, type JSX } from 'react'
+import { useState, type ChangeEvent, type JSX, type SyntheticEvent } from 'react'
 import { useNavigate } from 'react-router'
 import { useRealtime } from '../../01-network/event/hook'
 import { useRequest } from '../../01-network/requester'
-import type { Failure, Success } from '../../types'
 import { styles } from './style'
 import { validator } from './validator'
 
@@ -33,10 +32,10 @@ const init: State = {
   isLoading: false,
 }
 
-type ApiResponse = Success<true> | Failure
-
 const UploadComponent = (): JSX.Element => {
   const navigate = useNavigate()
+  const request = useRequest()
+  const [{ preview, severity, message, file, isLoading }, setState] = useState<State>(init)
 
   useRealtime({
     event: 'detection',
@@ -51,30 +50,31 @@ const UploadComponent = (): JSX.Element => {
     },
   })
 
-  const [{ preview, severity, message, file, isLoading }, setState] = useState<State>(init)
-  const request = useRequest<ApiResponse>()
-
-  const reset = (): void => {
+  const reset = ({
+    currentTarget,
+  }: ChangeEvent<HTMLInputElement> | SyntheticEvent<HTMLButtonElement>): void => {
     setState(({ preview }) => {
       if (preview) URL.revokeObjectURL(preview)
       return init
     })
+
+    if (currentTarget) currentTarget.value = ''
   }
 
-  const onChange = ({ target }: ChangeEvent<HTMLInputElement>): void => {
-    const validation = validator(target.files)
+  const onChange = (e: ChangeEvent<HTMLInputElement>): void => {
+    const validation = validator(e.target.files)
 
     if ('error' in validation) {
       return setState((p) => ({ ...p, severity: 'warning', message: validation.error.message }))
     }
 
-    reset()
+    reset(e)
 
     const url = URL.createObjectURL(validation.data)
     setState((p) => ({ ...p, preview: url, file: validation.data }))
   }
 
-  const onClick = async (): Promise<void> => {
+  const onClick = async (e: SyntheticEvent<HTMLButtonElement>): Promise<void> => {
     if (!file) return
 
     setState((p) => ({ ...p, isLoading: true }))
@@ -90,7 +90,7 @@ const UploadComponent = (): JSX.Element => {
       return setState((p) => ({ ...p, severity: 'error', message: res.error.message }))
     }
 
-    reset()
+    reset(e)
   }
 
   return (

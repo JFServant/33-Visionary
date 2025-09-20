@@ -1,3 +1,4 @@
+import { useCallback } from 'react'
 import { useNavigate } from 'react-router'
 import { env } from './env'
 import { Storer } from './storer'
@@ -8,39 +9,43 @@ type Options = {
   body?: unknown
 }
 
-type ApiError = { error: { message: string } }
+type Success<T> = { data: T }
+type Failure = { error: { message: string } }
 
-type Request<T> = (options: Options) => Promise<T | ApiError>
+type Request<T> = (options: Options) => Promise<Success<T> | Failure>
 
 const isFormData = (body: unknown): body is FormData => body instanceof FormData
 
 export const useRequest = <T>(): Request<T> => {
   const navigate = useNavigate()
 
-  return async ({ path, method, body }: Options): Promise<T | ApiError> => {
-    const token = Storer.get('token')
+  return useCallback(
+    async ({ path, method, body }: Options): Promise<Success<T> | Failure> => {
+      const token = Storer.get('token')
 
-    try {
-      const res = await fetch(`${env.VITE_API_URL}${path}`, {
-        method,
-        headers: {
-          ...(token ? { Authorization: `Bearer ${token}` } : {}),
-          ...(body && !isFormData(body) ? { 'Content-Type': 'application/json' } : {}),
-        },
-        ...(body ? (!isFormData(body) ? { body: JSON.stringify(body) } : { body }) : {}),
-      })
+      try {
+        const res = await fetch(`${env.VITE_API_URL}${path}`, {
+          method,
+          headers: {
+            ...(token ? { Authorization: `Bearer ${token}` } : {}),
+            ...(body && !isFormData(body) ? { 'Content-Type': 'application/json' } : {}),
+          },
+          ...(body ? (!isFormData(body) ? { body: JSON.stringify(body) } : { body }) : {}),
+        })
 
-      if (res.status === 401) {
-        Storer.remove('token')
-        Storer.remove('sub')
-        navigate('/identity', { replace: true })
+        if (res.status === 401) {
+          Storer.remove('token')
+          Storer.remove('sub')
+          navigate('/identity', { replace: true })
+        }
+
+        return res.json()
+      } catch {
+        return {
+          error: { message: 'Something went wrong... Try again later or contact the support.' },
+        }
       }
-
-      return res.json()
-    } catch {
-      return {
-        error: { message: 'Something went wrong... Try again later or contact the support.' },
-      }
-    }
-  }
+    },
+    [navigate]
+  )
 }

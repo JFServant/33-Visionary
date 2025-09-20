@@ -5,7 +5,6 @@ import { useForm } from 'react-hook-form'
 import { Link, useNavigate } from 'react-router'
 import { useRequest } from '../../01-network/requester'
 import { Storer } from '../../01-network/storer'
-import type { Data } from './contract'
 import { formSX, h2SX, linkSX } from './style'
 import { schema, type Schema } from './validator'
 
@@ -13,6 +12,8 @@ type State = {
   severity: AlertProps['severity']
   message: string
 }
+
+type Customer = { sub: string; token: string }
 
 const LoginComponent = (): JSX.Element => {
   const {
@@ -31,7 +32,7 @@ const LoginComponent = (): JSX.Element => {
     message: 'Advice: If you use a shared computer, make sure to open a private tab',
   })
 
-  const request = useRequest<Data>()
+  const request = useRequest<Customer>()
   const navigate = useNavigate()
 
   const onSubmit = async (data: unknown): Promise<void> => {

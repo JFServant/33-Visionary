@@ -7,8 +7,8 @@ export const styles: Record<string, SxProps<Theme>> = {
     flex: 1,
     flexDirection: 'column',
   })),
-  preview: sx(({ precision, palette, size }) => ({
-    border: `${precision[3]} double ${palette.primary.light}`,
+  preview: sx(({ shadows, size }) => ({
+    boxShadow: `inset ${shadows[1]}`,
     display: 'flex',
     flex: 1,
     margin: `${size[2]} 0`,

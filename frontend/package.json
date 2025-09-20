@@ -7,7 +7,7 @@
     "setup": "bun install && bun run env",
     "dev": "vite",
     "build": "tsc -b && vite build",
-    "prune": "ts-prune -p tsconfig.app.json -e",
+    "prune": "ts-prune -p tsconfig.app.json -e -i ../backend",
     "lint": "eslint --fix .",
     "format": "prettier --write . --log-level error",
     "preflight": "bun run tsc -p tsconfig.app.json && bun run prune && bun run lint && bun run format",
