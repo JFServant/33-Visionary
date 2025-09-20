@@ -5,7 +5,7 @@ export class DetectionModel {
   private static model: ObjectDetection | null = null
 
   static async init(): Promise<void> {
-    this.model = await load()
+    this.model = await load({ base: 'mobilenet_v2' })
   }
 
   static async getModel(): Promise<ObjectDetection> {
