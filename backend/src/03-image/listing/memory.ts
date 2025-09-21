@@ -1,5 +1,5 @@
 import { CacheManager, type CacheKey } from '../../01-infra/redis/cache/manager'
-import type { Image } from './types'
+import type { Image } from './contract'
 
 // Contract
 type Input = { customerID: string; images: Image[]; ttl: number }

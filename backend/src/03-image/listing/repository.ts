@@ -1,9 +1,15 @@
 import { eq } from 'drizzle-orm'
 import { images } from '../../01-infra/database/schema'
 import type { DrizzleTransaction } from '../../types'
-import type { RepoImage } from './types'
+import type { Image } from './contract'
 
 // Contract
+type RepoImage = {
+  id: string
+  internalName: string
+  predictions: Image['predictions']
+}
+
 export interface IListingRepository {
   getImagesBy(customerID: string): Promise<RepoImage[]>
 }

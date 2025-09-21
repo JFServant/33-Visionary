@@ -1,6 +1,6 @@
 import type { Context } from 'hono'
 import type { Success } from '../../types'
-import type { Image } from './types'
+import type { Image } from './contract'
 
 // Contract
 export interface IListingPresenter {

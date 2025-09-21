@@ -1,8 +1,8 @@
 import { describe, expect, it, mock } from 'bun:test'
 import { rollbackTXWrapper } from '../../../01-infra/database/test/drizzle'
 import { CacheManager } from '../../../01-infra/redis/cache/manager'
+import type { Image } from '../contract'
 import type { IListingPresenter } from '../presenter'
-import type { Image } from '../types'
 import { factory } from './factory'
 
 describe('ListingUsecase', async () => {

@@ -13,9 +13,3 @@ export type Image = {
   url: string
   predictions: Prediction[]
 }
-
-export type RepoImage = {
-  id: string
-  internalName: string
-  predictions: Prediction[]
-}
