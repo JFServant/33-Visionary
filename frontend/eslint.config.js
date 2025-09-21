@@ -20,25 +20,8 @@ export default tseslint.config([
       globals: globals.browser,
     },
     rules: {
-      '@typescript-eslint/consistent-type-imports': [
-        'error',
-        {
-          prefer: 'type-imports',
-          disallowTypeAnnotations: true,
-        },
-      ],
+      '@typescript-eslint/consistent-type-imports': 'error',
       '@typescript-eslint/explicit-function-return-type': 'error',
-      '@typescript-eslint/no-restricted-imports': [
-        'error',
-        {
-          patterns: [
-            {
-              regex: '^@backend(?:(?!\/types$)\/[^\/]+)*$',
-              message: 'Only type imports from @backend, in types.ts files are allowed.',
-            },
-          ],
-        },
-      ],
     },
   },
 ])

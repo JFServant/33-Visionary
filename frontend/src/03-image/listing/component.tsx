@@ -1,4 +1,3 @@
-import type { Image } from '@backend/src/03-image/listing/types'
 import {
   Alert,
   Backdrop,
@@ -12,6 +11,7 @@ import {
 } from '@mui/material'
 import { useEffect, useState, type JSX, type SyntheticEvent } from 'react'
 import { useRequest } from '../../01-network/requester'
+import type { Image } from './contract'
 import * as styles from './style'
 
 type Display = Image & {
