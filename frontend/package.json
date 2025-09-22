@@ -12,7 +12,9 @@
     "format": "prettier --write . --log-level error",
     "preflight": "bun run build && bun run prune && bun run lint && bun run format",
     "env": "cp .env.example .env",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "docker:run": "docker build -t frontend . && docker run -d -p 49432:80 --name frontend frontend",
+    "docker:clean": "docker stop frontend && docker system prune -af"
   },
   "dependencies": {
     "@emotion/react": "^11.14.0",
