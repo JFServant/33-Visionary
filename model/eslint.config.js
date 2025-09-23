@@ -13,6 +13,7 @@ export default defineConfig([
       '@typescript-eslint/consistent-type-imports': 'error',
       '@typescript-eslint/explicit-function-return-type': 'error',
     },
+    ignores: ['dist/**'],
   },
   tseslint.configs.recommended,
 ])
