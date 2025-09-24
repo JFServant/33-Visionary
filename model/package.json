@@ -11,7 +11,9 @@
     "format": "prettier --write . --log-level error",
     "preflight": "npm run build && npm run prune && npm run lint && npm run format",
     "test": "NODE_OPTIONS=--no-warnings node --loader ts-node/esm test-runner.ts",
-    "env": "cp .env.example .env"
+    "env": "cp .env.example .env",
+    "docker:run": "docker build -t model . && docker run -d -p 49543:49543 --name model model",
+    "docker:clean": "docker stop model && docker system prune -af"
   },
   "dependencies": {
     "@hono/node-server": "1.19.4",
