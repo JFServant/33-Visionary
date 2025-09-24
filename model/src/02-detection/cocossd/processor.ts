@@ -33,6 +33,9 @@ export class CocoSSDProcessor implements ICocoSSDProcessor {
         confidence: this.normalize(score),
       }))
     } catch {
+      console.log(
+        "If something fails here, it's critical, and must be addressed asap. We can consider adding real time Slack messaging for example."
+      )
       return null
     } finally {
       if (tensor) tensor.dispose()
