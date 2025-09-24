@@ -3,9 +3,9 @@ import { join } from 'path'
 import { DetectionUsecase } from '..'
 import { customers } from '../../../01-infra/database/schema/customer'
 import type { DrizzleTransaction } from '../../../types'
+import { DetectionGateway } from '../gateway'
 import { DetectionMemory } from '../memory'
 import type { IDetectionPresenter } from '../presenter'
-import { DetectionProcessor } from '../processor'
 import { DetectionRepository } from '../repository'
 import { DetectionStorer } from '../storer'
 
@@ -39,7 +39,7 @@ export const factory = async ({
 
   await new DetectionUsecase(
     new DetectionStorer('test'),
-    new DetectionProcessor(),
+    new DetectionGateway(),
     presenter,
     new DetectionRepository(tx),
     new DetectionMemory('test')

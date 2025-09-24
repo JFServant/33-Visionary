@@ -116,8 +116,20 @@ jobs:
       - name: 🗄️ Apply Test DB Schema
         run: bun run db:push:test
 
+      - name: 🐳 Build and start model container
+        run: |
+          docker build -t model ../model
+          docker run -d -p 49543:49543 --name model model
+          until curl -sf http://localhost:49543/health; do sleep 1; done
+
       - name: 🧪 Run Integration Tests
         run: bun run test
+
+      - name: 🐳 Stop and clean model container
+        if: always()
+        run: |
+          docker stop model
+          docker system prune -af
 
   # ---------------------
   # 3️⃣ Deploy (Dummy)

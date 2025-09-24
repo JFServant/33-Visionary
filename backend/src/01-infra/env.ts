@@ -2,6 +2,7 @@ import z from 'zod'
 
 const schema = z.object({
   CLIENT_URL: z.string().trim().nonempty(),
+  MODEL_URL: z.string().trim().nonempty(),
 
   DB_HOST: z.string().trim().nonempty(),
   DB_PORT: z.string().trim().nonempty().regex(/^\d+$/).transform(Number),
@@ -10,6 +11,7 @@ const schema = z.object({
   DB_PASSWORD: z.string().trim().nonempty(),
 
   JWT_SECRET: z.string().trim().nonempty(),
+  MODEL_SECRET: z.string().trim().nonempty(),
 
   REDIS_HOST: z.string().trim().nonempty(),
   REDIS_PORT: z.string().trim().nonempty().regex(/^\d+$/).transform(Number),

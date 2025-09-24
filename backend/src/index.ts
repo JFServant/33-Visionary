@@ -7,7 +7,6 @@ import { S3Manager } from './01-infra/s3/manager'
 import { sseConnection } from './01-infra/sse/connection'
 import { SSEManager } from './01-infra/sse/manager'
 import { identityRouter } from './02-identity/router'
-import { DetectionModel } from './03-image/detection/model'
 import { DetectionWorker } from './03-image/detection/worker'
 import { imageRouter } from './03-image/router'
 
@@ -25,7 +24,6 @@ DetectionAssigner(DetectionWorker.run)
 // Initialize tools
 ;(async (): Promise<void> => {
   await S3Manager.init()
-  await DetectionModel.init()
   SSEManager.heartbeat()
 })()
 
