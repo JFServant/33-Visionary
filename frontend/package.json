@@ -14,7 +14,8 @@
     "env": "cp .env.example .env",
     "preview": "vite preview",
     "docker:run": "docker build -t frontend . && docker run -d -p 49432:80 --name frontend frontend",
-    "docker:clean": "docker stop frontend && docker system prune -af"
+    "docker:stop": "docker stop frontend && docker rm frontend && docker rmi frontend",
+    "docker:nuke": "docker system prune -a && docker volume prune -a"
   },
   "dependencies": {
     "@emotion/react": "^11.14.0",
