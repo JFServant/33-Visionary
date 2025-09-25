@@ -5,7 +5,7 @@ export class CocoSSD {
   private static model: ObjectDetection | null = null
 
   static async init(): Promise<void> {
-    this.model = await load({ base: 'mobilenet_v2' })
+    this.model = await load()
   }
 
   static async getModel(): Promise<ObjectDetection> {
