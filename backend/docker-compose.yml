@@ -1,3 +1,5 @@
+name: services
+
 services:
   model:
     build:

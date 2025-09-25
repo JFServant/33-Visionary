@@ -10,7 +10,7 @@ import {
 } from '@aws-sdk/client-s3'
 import { getSignedUrl as getSignedS3Url } from '@aws-sdk/s3-request-presigner'
 import { env } from '../env'
-import { s3Client } from './connection'
+import { s3Client, s3SignedUrlClient } from './connection'
 
 type Buckets = ['images', 'test']
 export type BucketName = Buckets[number]
@@ -48,9 +48,13 @@ export class S3Manager {
   }
 
   static getSignedUrl({ bucket, fileName, ttl }: GetSignedUrl): Promise<string> {
-    return getSignedS3Url(s3Client, new GetObjectCommand({ Bucket: bucket, Key: fileName }), {
-      expiresIn: ttl,
-    })
+    return getSignedS3Url(
+      s3SignedUrlClient,
+      new GetObjectCommand({ Bucket: bucket, Key: fileName }),
+      {
+        expiresIn: ttl,
+      }
+    )
   }
 
   static async flush(bucket: BucketName): Promise<void> {

@@ -17,6 +17,7 @@ const schema = z.object({
   REDIS_PORT: z.string().trim().nonempty().regex(/^\d+$/).transform(Number),
   REDIS_PASSWORD: z.string().trim().nonempty(),
 
+  S3_SIGNED_URL: z.string().trim().nonempty(),
   S3_ENDPOINT: z.string().trim().nonempty(),
   S3_REGION: z.string().trim().nonempty(),
   S3_ACCESS_KEY: z.string().trim().nonempty(),
