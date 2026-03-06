@@ -30,4 +30,9 @@ export class EventManager {
     this.source?.removeEventListener(event, handler)
     this.events.delete(event)
   }
+
+  static disconnect(): void {
+    this.source?.close()
+    this.source = null
+  }
 }

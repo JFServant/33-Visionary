@@ -14,6 +14,7 @@ import { useEffect, type JSX } from 'react'
 import { NavLink, Outlet, useNavigate } from 'react-router'
 import Divider from '../../99-design/divider'
 import Title from '../../99-design/title'
+import { EventManager } from '../event/manager'
 import { Storer } from '../storer'
 import {
   articleSX,
@@ -44,6 +45,7 @@ const GuardScreen = (): JSX.Element => {
   const onClick = (): void => {
     Storer.remove('sub')
     Storer.remove('token')
+    EventManager.disconnect()
     navigate('/identity', { replace: true })
   }
 
