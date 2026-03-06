@@ -21,11 +21,12 @@ app.route('/image', imageRouter)
 
 DetectionAssigner(DetectionWorker.run)
 
-// Initialize tools
-;(async (): Promise<void> => {
+const init = async (): Promise<void> => {
   await S3Manager.init()
   SSEManager.heartbeat()
-})()
+}
+
+init()
 
 // ts-prune-ignore-next
 export default {

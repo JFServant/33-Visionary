@@ -1,16 +1,16 @@
-import type { IListingMemory } from './memory'
-import type { IListingPresenter } from './presenter'
-import type { IListingRepository } from './repository'
-import type { IListingStore } from './store'
+import type { IListingMemory } from './memory/contract'
+import type { IListingPresenter } from './presenter/contract'
+import type { IListingRepository } from './repository/contract'
+import type { IListingStorer } from './storer/contract'
 
-const TTL = 3600 // 1h
+const TTLInSeconds = 3600
 
 export class ListingUsecase {
   constructor(
     private readonly memory: IListingMemory,
     private readonly presenter: IListingPresenter,
     private readonly repository: IListingRepository,
-    private readonly store: IListingStore
+    private readonly storer: IListingStorer
   ) {}
 
   async execute(customerID: string): Promise<Response> {
@@ -23,12 +23,12 @@ export class ListingUsecase {
     const format = await Promise.all(
       images.map(async ({ id, internalName, predictions }) => ({
         id,
-        url: await this.store.getSignedUrl({ fileName: internalName, ttl: TTL }),
+        url: await this.storer.getSignedUrl({ fileName: internalName, ttl: TTLInSeconds }),
         predictions,
       }))
     )
 
-    await this.memory.cacheImages({ customerID, images: format, ttl: TTL })
+    await this.memory.cacheImages({ customerID, images: format, ttl: TTLInSeconds })
 
     return this.presenter.success({ data: format })
   }

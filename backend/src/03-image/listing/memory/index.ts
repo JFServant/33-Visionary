@@ -1,15 +1,7 @@
-import { CacheManager, type CacheKey } from '../../01-infra/redis/cache/manager'
-import type { Image } from './contract'
+import type { CacheKey } from '../../../01-infra/redis/cache/manager'
+import { CacheManager } from '../../../01-infra/redis/cache/manager'
+import type { IListingMemory, Image, Input } from './contract'
 
-// Contract
-type Input = { customerID: string; images: Image[]; ttl: number }
-
-export interface IListingMemory {
-  findImagesBy(customerID: string): Promise<Image[] | null>
-  cacheImages(input: Input): Promise<void>
-}
-
-// Concrete
 export class ListingMemory implements IListingMemory {
   constructor(private readonly key: CacheKey) {}
 

@@ -1,13 +1,5 @@
-import type { Failure, Success } from '../../types'
+import type { IUploadValidator, Validation } from './contract'
 
-// Contract
-type Validation = Success<File> | Failure
-
-export interface IUploadValidator {
-  parse(): Validation
-}
-
-// Concrete
 export class UploadValidator implements IUploadValidator {
   constructor(private readonly input: unknown) {}
 

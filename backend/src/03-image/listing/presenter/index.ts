@@ -1,14 +1,7 @@
 import type { Context } from 'hono'
-import type { Success } from '../../types'
-import type { Image } from './contract'
+import type { Success } from '../../../types'
+import type { IListingPresenter, Image } from './contract'
 
-// Contract
-export interface IListingPresenter {
-  success(data: Success<Image[]>): Response
-  memory(data: Success<Image[]>): Response
-}
-
-// Concrete
 export class ListingPresenter implements IListingPresenter {
   constructor(private readonly json: Context['json']) {}
 

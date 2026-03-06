@@ -6,9 +6,9 @@ import { customers } from '../../../01-infra/database/schema/customer'
 import { S3Manager } from '../../../01-infra/s3/manager'
 import type { DrizzleTransaction } from '../../../types'
 import { ListingMemory } from '../memory'
-import type { IListingPresenter } from '../presenter'
+import type { IListingPresenter } from '../presenter/contract'
 import { ListingRepository } from '../repository'
-import { ListingStore } from '../store'
+import { ListingStorer } from '../storer'
 
 type FactoryConfig = {
   tx: DrizzleTransaction
@@ -45,6 +45,6 @@ export const factory = async ({ tx, presenter, customerID }: FactoryConfig): Pro
     new ListingMemory('test'),
     presenter,
     new ListingRepository(tx),
-    new ListingStore('test')
+    new ListingStorer('test')
   ).execute(customerID)
 }

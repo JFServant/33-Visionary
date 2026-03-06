@@ -5,7 +5,7 @@ import { customers } from '../../../01-infra/database/schema/customer'
 import type { DrizzleTransaction } from '../../../types'
 import { DetectionGateway } from '../gateway'
 import { DetectionMemory } from '../memory'
-import type { IDetectionPresenter } from '../presenter'
+import type { IDetectionPresenter } from '../presenter/contract'
 import { DetectionRepository } from '../repository'
 import { DetectionStorer } from '../storer'
 

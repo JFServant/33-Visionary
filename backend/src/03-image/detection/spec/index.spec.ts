@@ -4,7 +4,7 @@ import { images } from '../../../01-infra/database/schema/image'
 import { predictions } from '../../../01-infra/database/schema/prediction'
 import { rollbackTXWrapper } from '../../../01-infra/database/test/drizzle'
 import { S3Manager } from '../../../01-infra/s3/manager'
-import type { IDetectionPresenter } from '../presenter'
+import type { IDetectionPresenter } from '../presenter/contract'
 import type { FileName } from './factory'
 import { factory } from './factory'
 

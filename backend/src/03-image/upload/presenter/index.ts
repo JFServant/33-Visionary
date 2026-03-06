@@ -1,13 +1,7 @@
 import type { Context } from 'hono'
-import type { Failure, Success } from '../../types'
+import type { Failure, Success } from '../../../types'
+import type { IUploadPresenter } from './contract'
 
-// Contract
-export interface IUploadPresenter {
-  validationFail(error: Failure): Response
-  success<T>(data: Success<T>): Response
-}
-
-// Concrete
 export class UploadPresenter implements IUploadPresenter {
   constructor(private readonly json: Context['json']) {}
 

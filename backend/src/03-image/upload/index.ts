@@ -1,7 +1,7 @@
-import type { IUploadPresenter } from './presenter'
-import type { IUploadQueuer } from './queuer'
-import type { IUploadStorer } from './storer'
-import type { IUploadValidator } from './validator'
+import type { IUploadPresenter } from './presenter/contract'
+import type { IUploadQueuer } from './queuer/contract'
+import type { IUploadStorer } from './storer/contract'
+import type { IUploadValidator } from './validator/contract'
 
 export class UploadUsecase {
   constructor(

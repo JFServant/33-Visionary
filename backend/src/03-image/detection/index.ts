@@ -1,8 +1,8 @@
-import type { IDetectionGateway } from './gateway'
-import type { IDetectionMemory } from './memory'
-import type { IDetectionPresenter } from './presenter'
-import type { IDetectionRepository } from './repository'
-import type { IDetectionStorer } from './storer'
+import type { IDetectionGateway } from './gateway/contract'
+import type { IDetectionMemory } from './memory/contract'
+import type { IDetectionPresenter } from './presenter/contract'
+import type { IDetectionRepository } from './repository/contract'
+import type { IDetectionStorer } from './storer/contract'
 
 type Input = {
   tmpPath: string

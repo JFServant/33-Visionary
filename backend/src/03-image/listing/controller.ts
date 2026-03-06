@@ -5,7 +5,7 @@ import { getTransaction, Transaction } from '../../01-infra/database/main/drizzl
 import { ListingMemory } from './memory'
 import { ListingPresenter } from './presenter'
 import { ListingRepository } from './repository'
-import { ListingStore } from './store'
+import { ListingStorer } from './storer'
 
 export class ListingController {
   @Transaction()
@@ -17,7 +17,7 @@ export class ListingController {
       new ListingMemory('listing'),
       new ListingPresenter(json),
       new ListingRepository(tx),
-      new ListingStore('images')
+      new ListingStorer('images')
     ).execute(customerID)
   }
 }
