@@ -11,10 +11,11 @@ app.get('/health', ({ json: response }) => {
 
 app.route('/detection', detectionRouter)
 
-// Initialize Models
-;(async (): Promise<void> => {
+const init = async (): Promise<void> => {
   await CocoSSD.init()
-})()
+}
+
+init()
 
 serve({
   fetch: app.fetch,

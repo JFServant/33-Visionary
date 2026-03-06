@@ -1,13 +1,7 @@
 import { node, type Tensor3D, type Tensor4D } from '@tensorflow/tfjs-node'
-import { CocoSSD } from '../../99-models/cocossd.js'
-import type { Data } from './contract.js'
+import { CocoSSD } from '../../../99-models/cocossd.js'
+import type { Data, ICocoSSDProcessor } from './contract.js'
 
-// Contract
-export interface ICocoSSDProcessor {
-  predict(image: Uint8Array): Promise<Data | null>
-}
-
-// Concrete
 export class CocoSSDProcessor implements ICocoSSDProcessor {
   async predict(image: Uint8Array): Promise<Data | null> {
     let tensor: Tensor3D | Tensor4D | null = null

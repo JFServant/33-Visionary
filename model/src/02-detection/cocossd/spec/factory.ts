@@ -2,9 +2,9 @@ import { readFileSync } from 'fs'
 import { dirname, join } from 'path'
 import { fileURLToPath } from 'url'
 import { CocoSSDUsecase } from '../index.js'
-import type { ICocoSSDPresenter } from '../presenter.js'
-import { CocoSSDProcessor } from '../processor.js'
-import { CocoSSDValidator } from '../validator.js'
+import type { ICocoSSDPresenter } from '../presenter/contract.js'
+import { CocoSSDProcessor } from '../processor/index.js'
+import { CocoSSDValidator } from '../validator/index.js'
 
 type BuildFormDataConfig = {
   fileName: 'cat.jpg' | 'empty.jpg'

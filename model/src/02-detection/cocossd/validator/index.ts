@@ -1,9 +1,5 @@
-// Contract
-export interface ICocoSSDValidator {
-  parse(): Promise<Uint8Array | null>
-}
+import type { ICocoSSDValidator } from './contract.js'
 
-// Concrete
 export class CocoSSDValidator implements ICocoSSDValidator {
   constructor(private readonly input: unknown) {}
 

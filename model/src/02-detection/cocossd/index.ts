@@ -1,6 +1,6 @@
-import type { ICocoSSDPresenter } from './presenter.js'
-import type { ICocoSSDProcessor } from './processor.js'
-import type { ICocoSSDValidator } from './validator.js'
+import type { ICocoSSDPresenter } from './presenter/contract.js'
+import type { ICocoSSDProcessor } from './processor/contract.js'
+import type { ICocoSSDValidator } from './validator/contract.js'
 
 export class CocoSSDUsecase {
   constructor(

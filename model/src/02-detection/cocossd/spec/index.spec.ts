@@ -1,6 +1,6 @@
 import { deepStrictEqual, strictEqual } from 'node:assert'
 import { beforeEach, describe, it, mock } from 'node:test'
-import type { ICocoSSDPresenter } from '../presenter.js'
+import type { ICocoSSDPresenter } from '../presenter/contract.js'
 import { buildFormData, factory } from './factory.js'
 
 describe('CocoSSDUsecase', async () => {

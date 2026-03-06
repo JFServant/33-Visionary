@@ -1,8 +1,8 @@
 import type { Context } from 'hono'
 import { CocoSSDUsecase } from './index.js'
-import { CocoSSDPresenter } from './presenter.js'
-import { CocoSSDProcessor } from './processor.js'
-import { CocoSSDValidator } from './validator.js'
+import { CocoSSDPresenter } from './presenter/index.js'
+import { CocoSSDProcessor } from './processor/index.js'
+import { CocoSSDValidator } from './validator/index.js'
 
 export class CocoSSDController {
   static async run({ req, json: response }: Context): Promise<Response> {
