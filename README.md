@@ -91,7 +91,7 @@ You will need [Docker Desktop](https://www.docker.com) installed on your compute
 
 ### Clone and Run
 
-_Note: This project ships with pre-filled `.env` & `.env.example` for local convenience. In production, environment variables should be managed securely via Secrets Manager or injected manually._
+_Note: This project ships with pre-filled `.env` & `.env.example` for local convenience. In production, environment variables should be managed securely via Secrets Manager or injected manually. Also the first docker run might take a few minutes (this depends on your device), please be patient._
 
 To start the demo, follow these steps:
 
@@ -101,8 +101,6 @@ cd 33-Visionary
 docker compose up -d
 ```
 
-You can now open your browser and reach the frontend at: http://localhost:49432
+Once Docker is running, open your browser and go to http://localhost:49432/identity/signup to access the frontend. Create an account (you can use dummy credentials) to test the application.
 
-_Tip: You can test the workflow using the sample images provided in the `/samples` folder._
-
-Once done, you can remove the demo with the following command: `docker compose down -v --rmi all`
+_Tip: You can test the workflow using the sample images provided in the `/samples` folder. Then remove the demo with the following command: `docker compose down -v --rmi all` at the end._
