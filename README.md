@@ -91,13 +91,14 @@ You will need [Docker Desktop](https://www.docker.com) installed on your compute
 
 ### Clone and Run
 
-_Note: This project ships with pre-filled `.env` & `.env.example` for local convenience. In production, environment variables should be managed securely via Secrets Manager or injected manually. Also the first docker run might take a few minutes (this depends on your device), please be patient._
+_Note: This project ships with a pre-filled `.env.example` for local convenience. In production, environment variables should be managed securely via Secrets Manager or injected manually. Also the first docker run might take a few minutes (this depends on your device), please be patient._
 
 To start the demo, follow these steps:
 
 ```bash
 git clone https://github.com/JFServant/33-Visionary.git
 cd 33-Visionary
+cp .env.example .env
 docker compose up -d
 ```
 
