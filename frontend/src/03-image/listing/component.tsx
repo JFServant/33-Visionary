@@ -9,25 +9,21 @@ import {
   Typography,
   type AlertProps,
 } from '@mui/material'
-import { useEffect, useLayoutEffect, useRef, useState, type JSX } from 'react'
+import { memo, useEffect, useLayoutEffect, useRef, useState, type JSX } from 'react'
 import { useRequest } from '../../01-network/requester'
 import type { Image } from './contract'
 import * as styles from './style'
 
 type Size = { width: number; height: number }
 
-type State = {
+type AlertState = {
   severity: AlertProps['severity']
   message: string
-  images: Image[] | null
-  display: Image | null
 }
 
-const initialState: State = {
+const initialAlert: AlertState = {
   severity: 'info',
   message: 'You can click on your images to see their predictions.',
-  images: null,
-  display: null,
 }
 
 const genAlt = (predictions: Image['predictions']): string => {
@@ -38,41 +34,105 @@ const genConfidence = (num: number): number => {
   return Math.round(num * 100)
 }
 
-const ListingComponent = (): JSX.Element => {
-  const request = useRequest<Image[]>()
-  const [{ severity, message, images, display }, setState] = useState<State>(initialState)
+type ImageGridItemProps = {
+  image: Image
+  onSelect: (image: Image) => void
+}
 
-  const overlayImageRef = useRef<HTMLImageElement>(null)
-  const [overlaySize, setOverlaySize] = useState<Size | null>(null)
+const ImageGridItem = memo(({ image, onSelect }: ImageGridItemProps): JSX.Element => {
+  return (
+    <ImageListItem sx={styles.item}>
+      <img
+        src={image.url}
+        alt={genAlt(image.predictions)}
+        loading="lazy"
+        onClick={() => onSelect(image)}
+      />
+    </ImageListItem>
+  )
+})
 
-  useEffect(() => {
-    ;(async (): Promise<void> => {
-      const res = await request({ method: 'GET', path: '/image/listing' })
+type ImageDetailProps = {
+  image: Image | null
+  onClose: () => void
+}
 
-      if ('error' in res) {
-        return setState((p) => ({ ...p, severity: 'error', message: res.error.message }))
-      }
-
-      setState((p) => ({ ...p, images: res.data }))
-    })()
-  }, [request])
+const ImageDetail = ({ image, onClose }: ImageDetailProps): JSX.Element | null => {
+  const imageRef = useRef<HTMLImageElement>(null)
+  const [size, setSize] = useState<Size | null>(null)
 
   useLayoutEffect(() => {
-    const element = overlayImageRef.current
+    const element = imageRef.current
 
     if (!element) return
 
     const observer = new ResizeObserver((): void => {
-      setOverlaySize({ width: element.clientWidth, height: element.clientHeight })
+      setSize({ width: element.clientWidth, height: element.clientHeight })
     })
 
     observer.observe(element)
 
     return (): void => {
       observer.disconnect()
-      setOverlaySize(null)
+      setSize(null)
     }
-  }, [display])
+  }, [image])
+
+  if (!image) return null
+
+  return (
+    <Backdrop open onClick={onClose}>
+      <Box component="div" sx={styles.imageBox}>
+        {size &&
+          size.width > 0 &&
+          image.predictions.map(({ id, x, y, width, height, classification, confidence }) => (
+            <Grow key={id} in timeout={1_000}>
+              <Box
+                component="div"
+                sx={styles.bbox({
+                  left: x * size.width,
+                  top: y * size.height,
+                  width: width * size.width,
+                  height: height * size.height,
+                })}
+              >
+                <Typography component="p" variant="subtitle2" sx={styles.classification}>
+                  {classification.toUpperCase()} {genConfidence(confidence)}%
+                </Typography>
+              </Box>
+            </Grow>
+          ))}
+        <Box
+          component="img"
+          ref={imageRef}
+          src={image.url}
+          alt={genAlt(image.predictions)}
+          sx={styles.image}
+        />
+      </Box>
+    </Backdrop>
+  )
+}
+
+const ListingComponent = (): JSX.Element => {
+  const request = useRequest<Image[]>()
+
+  const [{ severity, message }, setAlert] = useState<AlertState>(initialAlert)
+  const [images, setImages] = useState<Image[] | null>(null)
+  const [display, setDisplay] = useState<Image | null>(null)
+
+  useEffect(() => {
+    ;(async (): Promise<void> => {
+      const res = await request({ method: 'GET', path: '/image/listing' })
+
+      if ('error' in res) {
+        setAlert({ severity: 'error', message: res.error.message })
+        return
+      }
+
+      setImages(res.data)
+    })()
+  }, [request])
 
   const isImage = !!images && !!images.length
 
@@ -92,53 +152,13 @@ const ListingComponent = (): JSX.Element => {
           ) : (
             <ImageList variant="standard" cols={3} sx={styles.list}>
               {images.map((image) => (
-                <ImageListItem key={image.id} sx={styles.item}>
-                  <img
-                    src={image.url}
-                    alt={genAlt(image.predictions)}
-                    loading="lazy"
-                    onClick={() => setState((p) => ({ ...p, display: image }))}
-                  />
-                </ImageListItem>
+                <ImageGridItem key={image.id} image={image} onSelect={setDisplay} />
               ))}
             </ImageList>
           )}
         </Box>
 
-        {display && (
-          <Backdrop open={!!display} onClick={() => setState((p) => ({ ...p, display: null }))}>
-            <Box component="div" sx={styles.imageBox}>
-              {overlaySize &&
-                overlaySize.width > 0 &&
-                display.predictions.map(
-                  ({ id, x, y, width, height, classification, confidence }) => (
-                    <Grow key={id} in timeout={1_000}>
-                      <Box
-                        component="div"
-                        sx={styles.bbox({
-                          left: x * overlaySize.width,
-                          top: y * overlaySize.height,
-                          width: width * overlaySize.width,
-                          height: height * overlaySize.height,
-                        })}
-                      >
-                        <Typography component="p" variant="subtitle2" sx={styles.classification}>
-                          {classification.toUpperCase()} {genConfidence(confidence)}%
-                        </Typography>
-                      </Box>
-                    </Grow>
-                  )
-                )}
-              <Box
-                component="img"
-                ref={overlayImageRef}
-                src={display.url}
-                alt={genAlt(display.predictions)}
-                sx={styles.image}
-              />
-            </Box>
-          </Backdrop>
-        )}
+        <ImageDetail image={display} onClose={() => setDisplay(null)} />
       </Box>
     </Fade>
   )
