@@ -1,4 +1,4 @@
-name: Frontend CI/CD 🚀
+name: Frontend CI 🚀
 
 on:
   push:
@@ -49,15 +49,3 @@ jobs:
     steps:
       - name: 🧪 Dummy End-to-End Tests
         run: echo "🧪 Running End-to-End tests... (dummy step)"
-
-  # ---------------------
-  # 3️⃣ Deploy (Dummy)
-  # ---------------------
-  Deploy:
-    name: 🚀 Deploy to Production
-    runs-on: ubuntu-latest
-    needs: Tests
-    if: github.ref == 'refs/heads/main'
-    steps:
-      - name: 📦 Dummy Deploy
-        run: echo "🚀 Deploying to production... (dummy step)"

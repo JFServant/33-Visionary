@@ -1,4 +1,4 @@
-name: Backend CI/CD 🚀
+name: Backend CI 🚀
 
 on:
   push:
@@ -130,15 +130,3 @@ jobs:
         run: |
           docker stop model
           docker system prune -af
-
-  # ---------------------
-  # 3️⃣ Deploy (Dummy)
-  # ---------------------
-  Deploy:
-    name: 🚀 Deploy to Production
-    runs-on: ubuntu-latest
-    needs: Tests
-    if: github.ref == 'refs/heads/main'
-    steps:
-      - name: 📦 Dummy Deploy
-        run: echo "🚀 Deploying to production... (dummy step)"
