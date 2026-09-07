@@ -9,21 +9,18 @@ import {
   Typography,
   type AlertProps,
 } from '@mui/material'
-import { useEffect, useState, type JSX, type SyntheticEvent } from 'react'
+import { useEffect, useLayoutEffect, useRef, useState, type JSX } from 'react'
 import { useRequest } from '../../01-network/requester'
 import type { Image } from './contract'
 import * as styles from './style'
 
-type Display = Image & {
-  clientWidth: number
-  clientHeight: number
-}
+type Size = { width: number; height: number }
 
 type State = {
   severity: AlertProps['severity']
   message: string
   images: Image[] | null
-  display: Display | null
+  display: Image | null
 }
 
 const initialState: State = {
@@ -45,6 +42,9 @@ const ListingComponent = (): JSX.Element => {
   const request = useRequest<Image[]>()
   const [{ severity, message, images, display }, setState] = useState<State>(initialState)
 
+  const overlayImageRef = useRef<HTMLImageElement>(null)
+  const [overlaySize, setOverlaySize] = useState<Size | null>(null)
+
   useEffect(() => {
     ;(async (): Promise<void> => {
       const res = await request({ method: 'GET', path: '/image/listing' })
@@ -57,14 +57,22 @@ const ListingComponent = (): JSX.Element => {
     })()
   }, [request])
 
-  const onLoad = ({
-    currentTarget: { clientWidth, clientHeight },
-  }: SyntheticEvent<HTMLImageElement>): void => {
-    setState(({ display, ...rest }) => {
-      if (!display) return { ...rest, display: null }
-      return { ...rest, display: { ...display, clientWidth, clientHeight } }
+  useLayoutEffect(() => {
+    const element = overlayImageRef.current
+
+    if (!element) return
+
+    const observer = new ResizeObserver((): void => {
+      setOverlaySize({ width: element.clientWidth, height: element.clientHeight })
     })
-  }
+
+    observer.observe(element)
+
+    return (): void => {
+      observer.disconnect()
+      setOverlaySize(null)
+    }
+  }, [display])
 
   const isImage = !!images && !!images.length
 
@@ -89,12 +97,7 @@ const ListingComponent = (): JSX.Element => {
                     src={image.url}
                     alt={genAlt(image.predictions)}
                     loading="lazy"
-                    onClick={() =>
-                      setState((p) => ({
-                        ...p,
-                        display: { ...image, clientWidth: NaN, clientHeight: NaN },
-                      }))
-                    }
+                    onClick={() => setState((p) => ({ ...p, display: image }))}
                   />
                 </ImageListItem>
               ))}
@@ -105,30 +108,32 @@ const ListingComponent = (): JSX.Element => {
         {display && (
           <Backdrop open={!!display} onClick={() => setState((p) => ({ ...p, display: null }))}>
             <Box component="div" sx={styles.imageBox}>
-              {display.predictions.map(
-                ({ id, x, y, width, height, classification, confidence }) => (
-                  <Grow key={id} in timeout={1_000}>
-                    <Box
-                      component="div"
-                      sx={styles.bbox({
-                        left: x * display.clientWidth,
-                        top: y * display.clientHeight,
-                        width: width * display.clientWidth,
-                        height: height * display.clientHeight,
-                      })}
-                    >
-                      <Typography component="p" variant="subtitle2" sx={styles.classification}>
-                        {classification.toUpperCase()} {genConfidence(confidence)}%
-                      </Typography>
-                    </Box>
-                  </Grow>
-                )
-              )}
+              {overlaySize &&
+                overlaySize.width > 0 &&
+                display.predictions.map(
+                  ({ id, x, y, width, height, classification, confidence }) => (
+                    <Grow key={id} in timeout={1_000}>
+                      <Box
+                        component="div"
+                        sx={styles.bbox({
+                          left: x * overlaySize.width,
+                          top: y * overlaySize.height,
+                          width: width * overlaySize.width,
+                          height: height * overlaySize.height,
+                        })}
+                      >
+                        <Typography component="p" variant="subtitle2" sx={styles.classification}>
+                          {classification.toUpperCase()} {genConfidence(confidence)}%
+                        </Typography>
+                      </Box>
+                    </Grow>
+                  )
+                )}
               <Box
                 component="img"
+                ref={overlayImageRef}
                 src={display.url}
                 alt={genAlt(display.predictions)}
-                onLoad={onLoad}
                 sx={styles.image}
               />
             </Box>
