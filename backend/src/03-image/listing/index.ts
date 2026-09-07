@@ -3,7 +3,9 @@ import type { IListingPresenter } from './presenter/contract'
 import type { IListingRepository } from './repository/contract'
 import type { IListingStorer } from './storer/contract'
 
-const TTLInSeconds = 3600
+const SignedUrlTTLInSeconds = 3600
+const CacheTTLBufferInSeconds = 600
+const CacheTTLInSeconds = SignedUrlTTLInSeconds - CacheTTLBufferInSeconds
 
 export class ListingUsecase {
   constructor(
@@ -23,12 +25,12 @@ export class ListingUsecase {
     const format = await Promise.all(
       images.map(async ({ id, internalName, predictions }) => ({
         id,
-        url: await this.storer.getSignedUrl({ fileName: internalName, ttl: TTLInSeconds }),
+        url: await this.storer.getSignedUrl({ fileName: internalName, ttl: SignedUrlTTLInSeconds }),
         predictions,
       }))
     )
 
-    await this.memory.cacheImages({ customerID, images: format, ttl: TTLInSeconds })
+    await this.memory.cacheImages({ customerID, images: format, ttl: CacheTTLInSeconds })
 
     return this.presenter.success({ data: format })
   }
