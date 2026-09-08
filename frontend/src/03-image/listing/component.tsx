@@ -1,7 +1,15 @@
 import {
+  FirstPageRounded,
+  LastPageRounded,
+  NavigateBeforeRounded,
+  NavigateNextRounded,
+} from '@mui/icons-material'
+import {
   Alert,
   Backdrop,
   Box,
+  Button,
+  ButtonGroup,
   Fade,
   Grow,
   ImageList,
@@ -9,9 +17,9 @@ import {
   Typography,
   type AlertProps,
 } from '@mui/material'
-import { memo, useEffect, useLayoutEffect, useRef, useState, type JSX } from 'react'
+import { memo, useCallback, useEffect, useLayoutEffect, useRef, useState, type JSX } from 'react'
 import { useRequest } from '../../01-network/requester'
-import type { Image } from './contract'
+import type { Direction, Image, Page } from './contract'
 import * as styles from './style'
 
 type Size = { width: number; height: number }
@@ -114,27 +122,99 @@ const ImageDetail = ({ image, onClose }: ImageDetailProps): JSX.Element | null =
   )
 }
 
+type ListingPagerProps = {
+  page: Page
+  pageNumber: number
+  loading: boolean
+  onNavigate: (direction: Direction, cursor: string | null) => void
+}
+
+const ListingPager = ({
+  page,
+  pageNumber,
+  loading,
+  onNavigate,
+}: ListingPagerProps): JSX.Element => {
+  const isFirstPage = pageNumber <= 1
+  const isLastPage = pageNumber >= page.pageCount
+
+  return (
+    <ButtonGroup variant="contained" sx={styles.pager}>
+      <Button
+        aria-label="First page"
+        disabled={loading || isFirstPage}
+        onClick={() => onNavigate('first', null)}
+      >
+        <FirstPageRounded />
+      </Button>
+      <Button
+        aria-label="Previous page"
+        disabled={loading || isFirstPage}
+        onClick={() => onNavigate('prev', page.prevCursor)}
+      >
+        <NavigateBeforeRounded />
+      </Button>
+      <Button disableRipple disabled sx={styles.count}>
+        {pageNumber} / {page.pageCount}
+      </Button>
+      <Button
+        aria-label="Next page"
+        disabled={loading || isLastPage}
+        onClick={() => onNavigate('next', page.nextCursor)}
+      >
+        <NavigateNextRounded />
+      </Button>
+      <Button
+        aria-label="Last page"
+        disabled={loading || isLastPage}
+        onClick={() => onNavigate('last', null)}
+      >
+        <LastPageRounded />
+      </Button>
+    </ButtonGroup>
+  )
+}
+
 const ListingComponent = (): JSX.Element => {
-  const request = useRequest<Image[]>()
+  const request = useRequest<Page>()
 
   const [{ severity, message }, setAlert] = useState<AlertState>(initialAlert)
-  const [images, setImages] = useState<Image[] | null>(null)
+  const [page, setPage] = useState<Page | null>(null)
+  const [pageNumber, setPageNumber] = useState(1)
+  const [loading, setLoading] = useState(false)
   const [display, setDisplay] = useState<Image | null>(null)
 
-  useEffect(() => {
-    ;(async (): Promise<void> => {
-      const res = await request({ method: 'GET', path: '/image/listing' })
+  const load = useCallback(
+    async (direction: Direction, cursor: string | null): Promise<void> => {
+      setLoading(true)
+
+      const query = new URLSearchParams({ direction })
+      if (cursor) query.set('cursor', cursor)
+
+      const res = await request({ method: 'GET', path: `/image/listing?${query}` })
+
+      setLoading(false)
 
       if ('error' in res) {
         setAlert({ severity: 'error', message: res.error.message })
         return
       }
 
-      setImages(res.data)
-    })()
-  }, [request])
+      setPage(res.data)
+      setPageNumber((current) => {
+        if (direction === 'first') return 1
+        if (direction === 'last') return res.data.pageCount
+        return direction === 'next' ? current + 1 : current - 1
+      })
+    },
+    [request]
+  )
 
-  const isImage = !!images && !!images.length
+  useEffect(() => {
+    void load('first', null)
+  }, [load])
+
+  const hasImages = !!page && !!page.images.length
 
   return (
     <Fade in>
@@ -144,19 +224,23 @@ const ListingComponent = (): JSX.Element => {
             {message}
           </Typography>
         </Alert>
-        <Box component="div" sx={styles.container(!isImage)}>
-          {!isImage ? (
+        <Box component="div" sx={styles.container(!hasImages)}>
+          {!hasImages ? (
             <Typography component="p" variant="h6" sx={styles.info}>
               No images found.
             </Typography>
           ) : (
             <ImageList variant="standard" cols={3} sx={styles.list}>
-              {images.map((image) => (
+              {page.images.map((image) => (
                 <ImageGridItem key={image.id} image={image} onSelect={setDisplay} />
               ))}
             </ImageList>
           )}
         </Box>
+
+        {hasImages && (
+          <ListingPager page={page} pageNumber={pageNumber} loading={loading} onNavigate={load} />
+        )}
 
         <ImageDetail image={display} onClose={() => setDisplay(null)} />
       </Box>

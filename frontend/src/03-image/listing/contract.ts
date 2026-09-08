@@ -13,3 +13,12 @@ export type Image = {
   url: string
   predictions: Prediction[]
 }
+
+export type Direction = 'first' | 'prev' | 'next' | 'last'
+
+export type Page = {
+  images: Image[]
+  nextCursor: string | null
+  prevCursor: string | null
+  pageCount: number
+}

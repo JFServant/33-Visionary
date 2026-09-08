@@ -24,6 +24,15 @@ export const list = sx(({ size }) => ({
   margin: size[1],
 }))
 
+export const pager = sx(({ size }) => ({
+  margin: `${size[2]} auto 0`,
+}))
+
+export const count = sx(({ palette }) => ({
+  '&.Mui-disabled': { color: palette.text.primary },
+  cursor: 'default',
+}))
+
 export const item = sx(() => ({
   cursor: 'pointer',
   overflow: 'hidden',
