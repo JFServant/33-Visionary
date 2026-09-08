@@ -1,4 +1,4 @@
-import { describe, expect, it, mock } from 'bun:test'
+import { describe, expect, it, mock, type Mock } from 'bun:test'
 import { rollbackTXWrapper } from '../../../01-infra/database/test/drizzle'
 import { CacheManager } from '../../../01-infra/redis/cache/manager'
 import type { Success } from '../../../types'
@@ -6,18 +6,19 @@ import type { Page } from '../contract'
 import type { IListingPresenter } from '../presenter/contract'
 import { run, seed } from './factory'
 
+type PresentPage = (data: Success<Page>) => Response
+
 describe('ListingUsecase', () => {
-  const success = mock<(data: Success<Page>) => Response>()
-  const memory = mock<(data: Success<Page>) => Response>()
+  const success = mock<PresentPage>()
+  const memory = mock<PresentPage>()
   const presenter: IListingPresenter = { success, memory }
 
   const CUSTOMER_ID = 'customerID'
 
-  const presentedPage = (): Page => {
-    const { calls } = success.mock
+  const presented = ({ mock: { calls } }: Mock<PresentPage>): Page => {
     const call = calls[calls.length - 1]
 
-    if (!call) throw new Error('presenter.success was not called')
+    if (!call) throw new Error('presenter was not called')
 
     return call[0].data
   }
@@ -82,6 +83,7 @@ describe('ListingUsecase', () => {
       await CacheManager.set({
         key: 'test',
         customerID: CUSTOMER_ID,
+        segment: 'first',
         value: JSON.stringify(cached),
         ttl: 3600,
       })
@@ -98,7 +100,7 @@ describe('ListingUsecase', () => {
       await seed({ tx, customerID: CUSTOMER_ID, count: 25 })
       await run({ tx, presenter, customerID: CUSTOMER_ID, direction: 'first' })
 
-      const firstPage = presentedPage()
+      const firstPage = presented(success)
 
       expect(firstPage.images).toHaveLength(24)
       expect(firstPage.pageCount).toBe(2)
@@ -113,7 +115,7 @@ describe('ListingUsecase', () => {
         cursor: firstPage.nextCursor,
       })
 
-      const nextPage = presentedPage()
+      const nextPage = presented(success)
 
       expect(nextPage.images).toHaveLength(1)
       expect(nextPage.prevCursor).toEqual(expect.any(String))
@@ -121,11 +123,60 @@ describe('ListingUsecase', () => {
 
       await run({ tx, presenter, customerID: CUSTOMER_ID, direction: 'last' })
 
-      const lastPage = presentedPage()
+      const lastPage = presented(success)
 
       expect(lastPage.images).toHaveLength(1)
       expect(lastPage.nextCursor).toBeNull()
       expect(lastPage.images[0].id).toBe(nextPage.images[0].id)
+    })
+  })
+
+  it('should cache each page under its own key.', async () => {
+    await rollbackTXWrapper(async (tx) => {
+      await seed({ tx, customerID: CUSTOMER_ID, count: 60 })
+      await run({ tx, presenter, customerID: CUSTOMER_ID, direction: 'first' })
+
+      const firstPage = presented(success)
+
+      await run({
+        tx,
+        presenter,
+        customerID: CUSTOMER_ID,
+        direction: 'next',
+        cursor: firstPage.nextCursor,
+      })
+
+      const secondPage = presented(success)
+
+      await run({
+        tx,
+        presenter,
+        customerID: CUSTOMER_ID,
+        direction: 'next',
+        cursor: secondPage.nextCursor,
+      })
+
+      const thirdPage = presented(success)
+
+      await run({
+        tx,
+        presenter,
+        customerID: CUSTOMER_ID,
+        direction: 'next',
+        cursor: firstPage.nextCursor,
+      })
+
+      expect(presented(memory)).toEqual(secondPage)
+
+      await run({
+        tx,
+        presenter,
+        customerID: CUSTOMER_ID,
+        direction: 'next',
+        cursor: secondPage.nextCursor,
+      })
+
+      expect(presented(memory)).toEqual(thirdPage)
     })
   })
 })

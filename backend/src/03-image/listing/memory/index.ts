@@ -1,26 +1,28 @@
 import type { CacheKey } from '../../../01-infra/redis/cache/manager'
 import { CacheManager } from '../../../01-infra/redis/cache/manager'
-import type { Page } from '../contract'
+import type { Direction, Page } from '../contract'
 import type { Find, IListingMemory, Save } from './contract'
+
+const pageSegment = (direction: Direction, cursor: string | null): string => {
+  if (direction === 'first' || direction === 'last') return direction
+  return `${direction}:${cursor}`
+}
 
 export class ListingMemory implements IListingMemory {
   constructor(private readonly key: CacheKey) {}
 
-  async findImagesPage({ customerID, direction }: Find): Promise<Page | null> {
-    // #1 caches the first page only, #2 keys every page by cursor
-    if (direction !== 'first') return null
-
-    const cache = await CacheManager.get({ key: this.key, customerID })
+  async findImagesPage({ customerID, cursor, direction }: Find): Promise<Page | null> {
+    const segment = pageSegment(direction, cursor)
+    const cache = await CacheManager.get({ key: this.key, customerID, segment })
 
     if (!cache) return null
 
     return JSON.parse(cache)
   }
 
-  async cacheImagesPage({ customerID, direction, page, ttl }: Save): Promise<void> {
-    // #1 caches the first page only, #2 keys every page by cursor
-    if (direction !== 'first') return
+  async cacheImagesPage({ customerID, cursor, direction, page, ttl }: Save): Promise<void> {
+    const segment = pageSegment(direction, cursor)
 
-    await CacheManager.set({ key: this.key, customerID, value: JSON.stringify(page), ttl })
+    await CacheManager.set({ key: this.key, customerID, segment, value: JSON.stringify(page), ttl })
   }
 }
