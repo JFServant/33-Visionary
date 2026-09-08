@@ -1,22 +1,20 @@
-type Prediction = {
-  id: string
-  x: number
-  y: number
-  width: number
-  height: number
-  classification: string
-  confidence: number
+import type { Direction, Page } from '../contract'
+
+export type Find = {
+  customerID: string
+  cursor: string | null
+  direction: Direction
 }
 
-export type Image = {
-  id: string
-  url: string
-  predictions: Prediction[]
+export type Save = {
+  customerID: string
+  cursor: string | null
+  direction: Direction
+  page: Page
+  ttl: number
 }
-
-export type Input = { customerID: string; images: Image[]; ttl: number }
 
 export interface IListingMemory {
-  findImagesBy(customerID: string): Promise<Image[] | null>
-  cacheImages(input: Input): Promise<void>
+  findImagesPage(input: Find): Promise<Page | null>
+  cacheImagesPage(input: Save): Promise<void>
 }

@@ -1,0 +1,1 @@
+CREATE INDEX "customer_id__id_idx" ON "images" USING btree ("customer_id","_id");

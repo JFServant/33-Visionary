@@ -1,22 +1,7 @@
 import type { Success } from '../../../types'
-
-type Prediction = {
-  id: string
-  x: number
-  y: number
-  width: number
-  height: number
-  classification: string
-  confidence: number
-}
-
-export type Image = {
-  id: string
-  url: string
-  predictions: Prediction[]
-}
+import type { Page } from '../contract'
 
 export interface IListingPresenter {
-  success(data: Success<Image[]>): Response
-  memory(data: Success<Image[]>): Response
+  success(data: Success<Page>): Response
+  memory(data: Success<Page>): Response
 }

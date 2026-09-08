@@ -9,11 +9,28 @@ type Prediction = {
 }
 
 export type Image = {
+  _id: number
   id: string
   internalName: string
   predictions: Prediction[]
 }
 
+export type Scan = 'forward' | 'backward'
+
+export type Stats = {
+  total: number
+  minID: number | null
+  maxID: number | null
+}
+
+export type PageQuery = {
+  customerID: string
+  cursorID: number | null
+  scan: Scan
+  limit: number
+}
+
 export interface IListingRepository {
-  getImagesBy(customerID: string): Promise<Image[]>
+  getImagesStats(customerID: string): Promise<Stats>
+  getImagesPage(query: PageQuery): Promise<Image[]>
 }
