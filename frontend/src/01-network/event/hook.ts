@@ -1,5 +1,6 @@
 import { useEffect } from 'react'
-import { EventManager, type Listen } from './manager'
+import { EventManager } from './manager'
+import type { Listen } from './manager'
 
 export const useRealtime = ({ event, handler }: Listen): void => {
   useEffect(() => {

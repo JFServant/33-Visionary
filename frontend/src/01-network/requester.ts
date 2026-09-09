@@ -1,5 +1,6 @@
 import { useCallback } from 'react'
 import { useNavigate } from 'react-router'
+import type { Failure, Success } from '../types'
 import { env } from './env'
 import { Storer } from './storer'
 
@@ -8,9 +9,6 @@ type Options = {
   method: 'POST' | 'GET' | 'PATCH' | 'PUT' | 'DELETE'
   body?: unknown
 }
-
-type Success<T> = { data: T }
-type Failure = { error: { message: string } }
 
 type Request<T> = (options: Options) => Promise<Success<T> | Failure>
 

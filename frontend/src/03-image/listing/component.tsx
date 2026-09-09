@@ -15,9 +15,10 @@ import {
   ImageList,
   ImageListItem,
   Typography,
-  type AlertProps,
 } from '@mui/material'
-import { memo, useCallback, useEffect, useLayoutEffect, useRef, useState, type JSX } from 'react'
+import type { AlertProps } from '@mui/material'
+import { memo, useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react'
+import type { JSX } from 'react'
 import { useRequest } from '../../01-network/requester'
 import type { Direction, Image, Page } from './contract'
 import * as styles from './style'
@@ -139,7 +140,7 @@ const ListingPager = ({
   const isLastPage = pageNumber >= page.pageCount
 
   return (
-    <ButtonGroup variant="contained" sx={styles.pager}>
+    <ButtonGroup variant="contained" sx={styles.pager} aria-label="Pagination">
       <Button
         aria-label="First page"
         disabled={loading || isFirstPage}

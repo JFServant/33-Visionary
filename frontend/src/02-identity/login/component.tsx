@@ -1,12 +1,15 @@
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Alert, Box, Button, Slide, TextField, Typography, type AlertProps } from '@mui/material'
-import { useState, type JSX } from 'react'
+import { Alert, Box, Button, Slide, TextField, Typography } from '@mui/material'
+import type { AlertProps } from '@mui/material'
+import { useState } from 'react'
+import type { JSX } from 'react'
 import { useForm } from 'react-hook-form'
 import { Link, useNavigate } from 'react-router'
 import { useRequest } from '../../01-network/requester'
 import { Storer } from '../../01-network/storer'
 import { formSX, h2SX, linkSX } from './style'
-import { schema, type Schema } from './validator'
+import { schema } from './validator'
+import type { Schema } from './validator'
 
 type State = {
   severity: AlertProps['severity']

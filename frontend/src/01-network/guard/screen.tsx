@@ -10,7 +10,8 @@ import {
   ListItemText,
   Typography,
 } from '@mui/material'
-import { useEffect, type JSX } from 'react'
+import { useEffect } from 'react'
+import type { JSX } from 'react'
 import { NavLink, Outlet, useNavigate } from 'react-router'
 import Divider from '../../99-design/divider'
 import Title from '../../99-design/title'

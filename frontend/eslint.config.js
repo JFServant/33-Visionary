@@ -1,4 +1,5 @@
 import js from '@eslint/js'
+import importPlugin from 'eslint-plugin-import'
 import reactHooks from 'eslint-plugin-react-hooks'
 import reactRefresh from 'eslint-plugin-react-refresh'
 import { globalIgnores } from 'eslint/config'
@@ -15,6 +16,9 @@ export default tseslint.config([
       reactHooks.configs['recommended-latest'],
       reactRefresh.configs.vite,
     ],
+    plugins: {
+      import: importPlugin,
+    },
     languageOptions: {
       ecmaVersion: 2020,
       globals: globals.browser,
@@ -22,6 +26,7 @@ export default tseslint.config([
     rules: {
       '@typescript-eslint/consistent-type-imports': 'error',
       '@typescript-eslint/explicit-function-return-type': 'error',
+      'import/consistent-type-specifier-style': ['error', 'prefer-top-level'],
     },
   },
 ])

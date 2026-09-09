@@ -1,4 +1,5 @@
-import { alpha, createTheme, type SxProps, type Theme } from '@mui/material/styles'
+import { alpha, createTheme } from '@mui/material/styles'
+import type { SxProps, Theme } from '@mui/material/styles'
 
 export const sx = (sxProps: SxProps<Theme>): SxProps<Theme> => sxProps
 
