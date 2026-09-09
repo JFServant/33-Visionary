@@ -2,11 +2,14 @@ name: Backend CI 🚀
 
 on:
   push:
+    branches: [main]
     paths:
       - "backend/**"
+      - ".github/workflows/backend.yml"
   pull_request:
     paths:
       - "backend/**"
+      - ".github/workflows/backend.yml"
 
 jobs:
   # ---------------------
@@ -15,6 +18,7 @@ jobs:
   Preflight:
     name: 🔎 Preflight Checks
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     defaults:
       run:
         working-directory: backend
@@ -23,7 +27,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: 🥖 Set up Bun
-        uses: oven-sh/setup-bun@v1
+        uses: oven-sh/setup-bun@v2
         with:
           bun-version: latest
 
@@ -31,7 +35,9 @@ jobs:
         uses: actions/cache@v4
         with:
           path: backend/node_modules
-          key: ${{ runner.os }}-bun-${{ hashFiles('bun.lock') }}
+          key: ${{ runner.os }}-bun-${{ hashFiles('backend/bun.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-bun-
 
       - name: 📦 Install Dependencies
         run: bun install
@@ -46,56 +52,26 @@ jobs:
     name: 🧪 Integration Tests
     runs-on: ubuntu-latest
     needs: Preflight
+    timeout-minutes: 20
     defaults:
       run:
         working-directory: backend
-    services:
-      postgres:
-        image: postgres:17
-        ports:
-          - "49323:5432"
-        env:
-          POSTGRES_DB: test_db
-          POSTGRES_USER: test_user
-          POSTGRES_PASSWORD: test_pass
-        options: >-
-          --health-cmd="pg_isready -U test_user -d test_db"
-          --health-interval=10s
-          --health-timeout=5s
-          --health-retries=5
-
-      minio:
-        image: minio/minio:latest
-        ports:
-          - "49327:9000"
-        options: >-
-          --entrypoint sh
-          minio/minio:latest
-          -c "minio server /data"
-          --health-cmd="curl -f http://localhost:9000/minio/health/ready || exit 1"
-          --health-interval=10s
-          --health-timeout=5s
-          --health-retries=5
-
-      redis:
-        image: redis:8
-        ports:
-          - "49325:6379"
-        options: >-
-          --entrypoint sh
-          redis:8
-          -c "redis-server --requirepass redis_pass"
-          --health-cmd="redis-cli -a redis_pass ping"
-          --health-interval=10s
-          --health-timeout=5s
-          --health-retries=5
-
     steps:
       - name: 📥 Checkout Repository
         uses: actions/checkout@v4
 
+      - name: 🐳 Start service containers
+        run: |
+          docker run -d --name postgres -p 49323:5432 \
+            -e POSTGRES_DB=test_db -e POSTGRES_USER=test_user -e POSTGRES_PASSWORD=test_pass \
+            postgres:17
+          docker run -d --name redis -p 49325:6379 \
+            redis:8 redis-server --requirepass redis_pass
+          docker run -d --name minio -p 49327:9000 \
+            minio/minio:latest server /data
+
       - name: 🥖 Set up Bun
-        uses: oven-sh/setup-bun@v1
+        uses: oven-sh/setup-bun@v2
         with:
           bun-version: latest
 
@@ -103,7 +79,7 @@ jobs:
         uses: actions/cache@v4
         with:
           path: backend/node_modules
-          key: ${{ runner.os }}-bun-${{ hashFiles('bun.lock') }}
+          key: ${{ runner.os }}-bun-${{ hashFiles('backend/bun.lock') }}
           restore-keys: |
             ${{ runner.os }}-bun-
 
@@ -112,6 +88,13 @@ jobs:
 
       - name: ⚙️ Setup Environment
         run: bun run env:ci
+
+      - name: ⏳ Wait for services
+        run: |
+          timeout 120 bash -c '
+            until docker exec postgres pg_isready -U test_user -d test_db; do sleep 2; done
+            until docker exec redis redis-cli -a redis_pass ping | grep -q PONG; do sleep 2; done
+            until curl -sf http://localhost:49327/minio/health/ready > /dev/null; do sleep 2; done'
 
       - name: 🗄️ Apply Test DB Schema
         run: bun run db:push:test
@@ -125,8 +108,6 @@ jobs:
       - name: 🧪 Run Integration Tests
         run: bun run test
 
-      - name: 🐳 Stop and clean model container
+      - name: 🐳 Stop and clean containers
         if: always()
-        run: |
-          docker stop model
-          docker system prune -af
+        run: docker rm -f postgres redis minio model
