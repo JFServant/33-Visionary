@@ -14,6 +14,8 @@ const app = new Hono()
 
 app.use(cors({ origin: env.CLIENT_URL }))
 
+app.get('/health', (c): Response => c.json({ ok: true }))
+
 app.get('/event/:customerID', sseConnection)
 
 app.route('/identity', identityRouter)

@@ -40,12 +40,76 @@ jobs:
         run: bun run preflight
 
   # ---------------------
-  # 2️⃣ End-to-End Tests (Dummy)
+  # 2️⃣ Integration Tests
   # ---------------------
   Tests:
+    name: 🧪 Integration Tests
+    runs-on: ubuntu-latest
+    needs: Preflight
+    defaults:
+      run:
+        working-directory: frontend
+    steps:
+      - name: 📥 Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: 🥖 Set up Bun
+        uses: oven-sh/setup-bun@v1
+        with:
+          bun-version: latest
+
+      - name: 📦 Cache Dependencies
+        uses: actions/cache@v4
+        with:
+          path: frontend/node_modules
+          key: ${{ runner.os }}-bun-${{ hashFiles('bun.lock') }}
+
+      - name: 📦 Install Dependencies
+        run: bun install
+
+      - name: 🧪 Run Integration Tests
+        run: bun run test
+
+  # ---------------------
+  # 3️⃣ End-to-End Tests
+  # ---------------------
+  E2E:
     name: 🧪 End-to-End Tests
     runs-on: ubuntu-latest
     needs: Preflight
     steps:
-      - name: 🧪 Dummy End-to-End Tests
-        run: echo "🧪 Running End-to-End tests... (dummy step)"
+      - name: 📥 Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: 🥖 Set up Bun
+        uses: oven-sh/setup-bun@v1
+        with:
+          bun-version: latest
+
+      - name: ⚙️ Setup Environment
+        run: cp .env.example .env
+
+      - name: 🐳 Start the stack
+        run: docker compose up -d --wait --build
+
+      - name: ⏳ Wait for services
+        run: |
+          timeout 180 bash -c '
+            for url in http://localhost:49432 http://localhost:49321/health http://localhost:49543/health; do
+              until curl -sf "$url" > /dev/null; do echo "waiting for $url"; sleep 2; done
+            done'
+
+      - name: 🧪 Run E2E Tests
+        uses: cypress-io/github-action@v6
+        with:
+          working-directory: frontend
+          install-command: bun install
+          command: bun run e2e
+
+      - name: 🪵 Dump compose logs
+        if: failure()
+        run: docker compose logs
+
+      - name: 🧹 Tear down
+        if: always()
+        run: docker compose down -v
