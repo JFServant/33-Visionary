@@ -1,5 +1,6 @@
 import { readFile, unlink } from 'fs/promises'
-import { S3Manager, type BucketName } from '../../../01-infra/s3/manager'
+import { S3Manager } from '../../../01-infra/s3/manager'
+import type { BucketName } from '../../../01-infra/s3/manager'
 import type { IDetectionStorer, Input } from './contract'
 
 export class DetectionStorer implements IDetectionStorer {
