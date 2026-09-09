@@ -23,5 +23,6 @@
     "noFallthroughCasesInSwitch": true,
     "noUncheckedSideEffectImports": true
   },
-  "include": ["src", "test", "theme.d.ts"]
+  "include": ["src", "test", "theme.d.ts"],
+  "exclude": ["test/e2e", "test/cypress.config.ts"]
 }

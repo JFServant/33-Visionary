@@ -29,4 +29,16 @@ export default tseslint.config([
       'import/consistent-type-specifier-style': ['error', 'prefer-top-level'],
     },
   },
+  {
+    files: ['test/e2e/**/*.cy.ts'],
+    languageOptions: {
+      globals: {
+        ...globals.mocha,
+        cy: 'readonly',
+        Cypress: 'readonly',
+        expect: 'readonly',
+        assert: 'readonly',
+      },
+    },
+  },
 ])
