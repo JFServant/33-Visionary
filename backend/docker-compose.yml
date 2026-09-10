@@ -1,15 +1,6 @@
 name: services
 
 services:
-  model:
-    build:
-      context: ../model
-      dockerfile: Dockerfile
-    container_name: model
-    restart: always
-    ports:
-      - 49543:49543
-
   local_db:
     image: postgres:17
     container_name: local_db
