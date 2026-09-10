@@ -29,7 +29,7 @@ jobs:
       - name: 🥖 Set up Bun
         uses: oven-sh/setup-bun@v2
         with:
-          bun-version: latest
+          bun-version: 1.2.20
 
       - name: 📦 Cache Dependencies
         uses: actions/cache@v4
@@ -68,12 +68,12 @@ jobs:
           docker run -d --name redis -p 49325:6379 \
             redis:8 redis-server --requirepass redis_pass
           docker run -d --name minio -p 49327:9000 \
-            minio/minio:latest server /data
+            quay.io/minio/minio:latest server /data
 
       - name: 🥖 Set up Bun
         uses: oven-sh/setup-bun@v2
         with:
-          bun-version: latest
+          bun-version: 1.2.20
 
       - name: 📦 Restore Cache
         uses: actions/cache@v4
@@ -103,7 +103,7 @@ jobs:
         run: |
           docker build -t model ../model
           docker run -d -p 49543:49543 --name model model
-          until curl -sf http://localhost:49543/health; do sleep 1; done
+          timeout 60 bash -c 'until curl -sf http://localhost:49543/health; do sleep 1; done'
 
       - name: 🧪 Run Integration Tests
         run: bun run test

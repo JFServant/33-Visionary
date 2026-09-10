@@ -5,23 +5,16 @@
 1. [About](#about)
 2. [Tech Stack](#tech-stack)
 3. [Architecture](#architecture)
-4. [Start the Demo](#start-the-demo)
+4. [Engineering Notes](#engineering-notes)
+5. [Start the Demo](#start-the-demo)
 
 ## About
 
-This repo was crafted to demonstrate how to build a resilient, full-stack system using modern tools and technologies, structured around Clean Architecture.
+Visionary is a working AI image-detection app: upload an image, a background job runs it through an object-detection model, and the predictions come back as bounding boxes drawn over the original.
 
-It showcases a complete application workflow, including:
+The product surface is intentionally small: account creation, image upload, asynchronous detection, a paginated results view. The point is how it is built, with three deployable services (frontend, API, model) on a Clean Architecture codebase, asynchronous processing through a queue and a worker, real object storage and caching, and a test suite that runs against live infrastructure instead of mocks.
 
-- Frontend & UI Interactions
-- Backend APIs & Business Logic
-- Job Queues & Asynchronous Processing
-- Storage & Database Management
-- AI-Powered Features
-
-The project highlights best practices in architecture, maintainability, and containerized workflows, making it easy to follow, run locally, and extend toward production deployments.
-
-_Disclaimer: The AI Image Detection model used here is a local pre-trained model and may not be fully accurate. Its main purpose is to illustrate the implementation workflow; it can easily be replaced with a production-grade service like AWS Rekognition or GCP Vision._
+_Disclaimer: the detection model is a local pre-trained model (COCO-SSD) and is not meant to be accurate. It stands in for a production service such as AWS Rekognition or GCP Vision, and the gateway around it is written so that swap is a single adapter._
 
 ## Tech Stack
 
@@ -56,7 +49,7 @@ _Disclaimer: The AI Image Detection model used here is a local pre-trained model
 
 ## Architecture
 
-The diagram below shows the AI Image Detection workflow, explaining how images travel through the system, how detection jobs are processed asynchronously, and how results are stored and delivered back to the frontend.
+The detection workflow is asynchronous from end to end: the upload responds immediately, detection runs as a queued job, and the result is pushed back to the browser over Server-Sent Events.
 
 ```mermaid
 flowchart LR
@@ -82,6 +75,16 @@ W -- #4 Store Image --> CS
 W -- #5 Delete Image --> TS
 W -- #6 Send SSE --> F
 ```
+
+The upload endpoint does the minimum: save the file to temporary storage, enqueue a job, respond. Everything else (model call, saving the result, moving the image to permanent storage, cleanup, notifying the client) runs in the worker, so a slow or failing model never blocks the request path.
+
+## Engineering Notes
+
+- **Tests run against real infrastructure, not mocks.** The backend suite exercises Postgres, Redis, MinIO, and the model container, all stood up by CI before the run. Database writes roll back per test, Redis and object storage are flushed between tests. Frontend specs mount the real component and fake only the network, and a Cypress run covers signup through prediction end to end.
+- **A transaction decorator keeps the wiring invisible.** `@Transaction()` on a handler opens one transaction and runs the whole call inside an `AsyncLocalStorage` context, so downstream code calls `getTransaction()` instead of threading a connection through every collaborator. Commit or rollback happens once, at the boundary.
+- **One route, one use case.** Every endpoint maps to a single use case that receives its collaborators as injected ports (validator, presenter, storer, queuer). The frontend follows the same rule: one endpoint, one purpose-built component.
+- **The model provider is swappable.** Object detection sits behind a port, so replacing COCO-SSD with Rekognition or Vision is one adapter with no use-case changes.
+- **The data-heavy screen is built to stay cheap.** The image listing uses keyset pagination over a compound index, caches each page, invalidates per customer, and the React view splits its state so opening an image re-renders the detail overlay, not the grid.
 
 ## Start the Demo
 
