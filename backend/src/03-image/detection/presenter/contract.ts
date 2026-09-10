@@ -1,4 +1,7 @@
+import type { Outcome } from '../contract'
+
 export interface IDetectionPresenter {
-  success(message: 'success'): Promise<void>
-  detectionFail(message: 'failure'): Promise<void>
+  success(outcome: Outcome): Outcome
+  detectionFail(outcome: Outcome): Outcome
+  imageExists(outcome: Outcome): Outcome
 }

@@ -28,7 +28,7 @@ export class UploadValidator implements IUploadValidator {
   }
 
   private isImageType(input: File): boolean {
-    return input.type.startsWith('image/')
+    return ['image/png', 'image/jpeg'].includes(input.type)
   }
 
   private isSizeUnder10MB(image: File): boolean {

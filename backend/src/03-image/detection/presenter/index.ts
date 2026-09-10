@@ -1,22 +1,16 @@
-import { SSEManager } from '../../../01-infra/sse/manager'
+import type { Outcome } from '../contract'
 import type { IDetectionPresenter } from './contract'
 
 export class DetectionPresenter implements IDetectionPresenter {
-  constructor(private readonly customerID: string) {}
-
-  async success(message: 'success'): Promise<void> {
-    await SSEManager.write({
-      customerID: this.customerID,
-      event: 'detection',
-      message,
-    })
+  success(outcome: Outcome): Outcome {
+    return outcome
   }
 
-  async detectionFail(message: 'failure'): Promise<void> {
-    await SSEManager.write({
-      customerID: this.customerID,
-      event: 'detection',
-      message,
-    })
+  detectionFail(outcome: Outcome): Outcome {
+    return outcome
+  }
+
+  imageExists(outcome: Outcome): Outcome {
+    return outcome
   }
 }

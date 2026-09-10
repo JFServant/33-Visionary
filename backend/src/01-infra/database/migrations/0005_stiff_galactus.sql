@@ -1,0 +1,1 @@
+ALTER TABLE "images" ADD CONSTRAINT "images_internal_name_unique" UNIQUE("internal_name");

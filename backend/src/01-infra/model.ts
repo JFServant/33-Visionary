@@ -8,7 +8,7 @@ type Request = {
 }
 
 export class Model {
-  static async request<T>({ domain, model, body }: Request): Promise<Success<T | null>> {
+  static async request<T>({ domain, model, body }: Request): Promise<Success<T>> {
     const res = await fetch(`${env.MODEL_URL}/${domain}/${model}`, {
       method: 'POST',
       headers: {
@@ -17,7 +17,7 @@ export class Model {
       body,
     })
 
-    if (!res.ok) return { data: null }
+    if (!res.ok) throw new Error(`model ${domain}/${model} request failed: ${res.status}`)
 
     return res.json()
   }

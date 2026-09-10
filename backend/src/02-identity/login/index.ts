@@ -4,6 +4,9 @@ import type { ILoginRepository } from './repository/contract'
 import type { ILoginTokenizer } from './tokenizer/contract'
 import type { ILoginValidator } from './validator/contract'
 
+const DUMMY_HASH =
+  '$argon2id$v=19$m=65536,t=3,p=2$L9uWrxhnjZW2tcEGbqjc2w$4W82hrPQQAlevNJmjojFuUdfvk980inbFl3mt0csQ2c'
+
 export class LoginUsecase {
   constructor(
     private readonly validator: ILoginValidator,
@@ -25,6 +28,8 @@ export class LoginUsecase {
     const customer = await this.repository.getCustomerBy(email)
 
     if (!customer) {
+      await this.hasher.verify({ hash: DUMMY_HASH, password })
+
       return this.presenter.invalidEmail({ error: { message: 'Invalid credentials.' } })
     }
 

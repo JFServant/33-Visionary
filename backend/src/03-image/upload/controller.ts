@@ -8,7 +8,7 @@ import { UploadValidator } from './validator'
 
 export class UploadController {
   static async run({ req, get, json }: Context): Promise<Response> {
-    const body = await req.formData().catch(Error)
+    const body = await req.formData().catch(() => {})
     const customerID = Authenticator.getCustomerID(get)
 
     return new UploadUsecase(

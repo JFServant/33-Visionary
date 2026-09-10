@@ -1,16 +1,10 @@
+import { Mime } from '../../../01-infra/mime'
 import { Model } from '../../../01-infra/model'
 import type { IDetectionGateway, Input, Prediction } from './contract'
 
-const MIME_BY_EXTENSION: Record<string, string> = {
-  png: 'image/png',
-  jpg: 'image/jpeg',
-  jpeg: 'image/jpeg',
-  webp: 'image/webp',
-}
-
 export class DetectionGateway implements IDetectionGateway {
   async predict({ image, internalName }: Input): Promise<Prediction[] | null> {
-    const mimeType = this.resolveMimeType(internalName)
+    const mimeType = Mime.resolve(internalName)
 
     if (!mimeType) return null
 
@@ -27,15 +21,5 @@ export class DetectionGateway implements IDetectionGateway {
     })
 
     return data
-  }
-
-  private resolveMimeType(internalName: string): string | null {
-    const segments = internalName.split('.')
-
-    if (segments.length < 2) return null
-
-    const extension = segments[segments.length - 1].toLowerCase()
-
-    return MIME_BY_EXTENSION[extension] ?? null
   }
 }

@@ -10,11 +10,11 @@ export class LoginPresenter implements ILoginPresenter {
   }
 
   invalidEmail(error: Failure): Response {
-    return this.json(error, 400)
+    return this.json(error, 401)
   }
 
   invalidPassword(error: Failure): Response {
-    return this.json(error, 400)
+    return this.json(error, 401)
   }
 
   success<T>(data: Success<T>): Response {

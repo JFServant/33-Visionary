@@ -12,18 +12,22 @@ export class Authenticator {
   }
 
   static async guard({ req, json, set }: Context, next: Next): Promise<Response | void> {
-    const header = req.header('Authorization')
-
     try {
+      const header = req.header('Authorization')
+
       if (!header?.startsWith('Bearer ')) throw 'Missing Bearer.'
 
-      const token = header.split(' ')[1]
+      await Authenticator.authenticate(header.split(' ')[1], set)
 
-      const payload = await verify(token, env.JWT_SECRET)
+      return next()
+    } catch {
+      return json({ error: { message: 'Unauthorized.' } } satisfies Failure, 401)
+    }
+  }
 
-      if (typeof payload?.sub !== 'string') throw 'Dev logic fail.'
-
-      set('customerID', payload.sub)
+  static async guardStream({ req, json, set }: Context, next: Next): Promise<Response | void> {
+    try {
+      await Authenticator.authenticate(req.query('token'), set)
 
       return next()
     } catch {
@@ -37,6 +41,16 @@ export class Authenticator {
     if (!customerID) throw 'Dev logic fail.'
 
     return customerID
+  }
+
+  private static async authenticate(token: string | undefined, set: Context['set']): Promise<void> {
+    if (!token) throw 'Missing token.'
+
+    const payload = await verify(token, env.JWT_SECRET)
+
+    if (typeof payload?.sub !== 'string') throw 'Dev logic fail.'
+
+    set('customerID', payload.sub)
   }
 
   private static expiresIn(minutes: number): number {

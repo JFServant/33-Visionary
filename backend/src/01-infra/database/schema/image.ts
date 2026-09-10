@@ -10,7 +10,7 @@ export const images = pgTable(
     _id: serial('_id').primaryKey(),
     id: text('id').notNull().unique().$defaultFn(nanoid),
     originalName: text('original_name').notNull(),
-    internalName: text('internal_name').notNull(),
+    internalName: text('internal_name').notNull().unique(),
     createdAt: timestamp('created_at').notNull().defaultNow(),
     updatedAt: timestamp('updated_at').notNull().defaultNow(),
     customerID: text('customer_id')

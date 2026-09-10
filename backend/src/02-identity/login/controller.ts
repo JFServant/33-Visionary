@@ -10,7 +10,7 @@ import { LoginValidator } from './validator'
 export class LoginController {
   @Transaction()
   static async run({ req, json }: Context): Promise<Response> {
-    const body = await req.json().catch(Error)
+    const body = await req.json().catch(() => {})
     const tx = getTransaction()
 
     return new LoginUsecase(

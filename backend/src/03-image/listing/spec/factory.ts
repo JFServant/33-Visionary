@@ -36,7 +36,7 @@ export const seed = async ({ tx, customerID, count }: SeedConfig): Promise<void>
   for (let n = 0; n < count; n++) {
     const [{ imageID }] = await tx
       .insert(images)
-      .values({ originalName: FILE_NAME, internalName: FILE_NAME, customerID })
+      .values({ originalName: FILE_NAME, internalName: `${FILE_NAME}-${n}`, customerID })
       .returning({ imageID: images.id })
 
     await tx.insert(predictions).values({

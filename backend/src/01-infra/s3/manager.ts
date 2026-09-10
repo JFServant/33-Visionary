@@ -15,7 +15,7 @@ import { s3Client, s3SignedUrlClient } from './connection'
 type Buckets = ['images', 'test']
 export type BucketName = Buckets[number]
 
-type PutObject = { bucket: BucketName; fileName: string; file: Buffer }
+type PutObject = { bucket: BucketName; fileName: string; file: Buffer; contentType?: string }
 type GetObject = { bucket: BucketName; fileName: string }
 type DeleteObject = { bucket: BucketName; fileName: string }
 type GetSignedUrl = { bucket: BucketName; fileName: string; ttl: number }
@@ -35,8 +35,15 @@ export class S3Manager {
     }
   }
 
-  static async putObject({ bucket, fileName, file }: PutObject): Promise<void> {
-    await s3Client.send(new PutObjectCommand({ Bucket: bucket, Key: fileName, Body: file }))
+  static async putObject({ bucket, fileName, file, contentType }: PutObject): Promise<void> {
+    await s3Client.send(
+      new PutObjectCommand({
+        Bucket: bucket,
+        Key: fileName,
+        Body: file,
+        ContentType: contentType,
+      })
+    )
   }
 
   static getObject({ bucket, fileName }: GetObject): Promise<GetObjectCommandOutput> {

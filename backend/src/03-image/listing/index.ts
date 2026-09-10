@@ -27,7 +27,11 @@ export class ListingUsecase {
     const pageCount = Math.ceil(total / PAGE_SIZE)
     const lastPageSize = total - (pageCount - 1) * PAGE_SIZE
 
-    const cursorID = cursor === null ? null : this.encoder.decode(cursor)
+    const cursorID =
+      cursor === null || direction === 'first' || direction === 'last'
+        ? null
+        : this.encoder.decode(cursor)
+
     const scan: Scan = direction === 'prev' || direction === 'last' ? 'backward' : 'forward'
     const limit = direction === 'last' ? lastPageSize : PAGE_SIZE
 

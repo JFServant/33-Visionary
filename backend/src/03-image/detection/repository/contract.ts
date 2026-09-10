@@ -17,6 +17,7 @@ export type Prediction = {
 }
 
 export interface IDetectionRepository {
+  imageExists(internalName: string): Promise<boolean>
   createImage(input: Image): Promise<ImageID>
   createPredictions(input: Prediction[]): Promise<void>
 }

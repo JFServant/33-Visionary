@@ -1,13 +1,9 @@
 import type { Context } from 'hono'
-import type { Failure } from '../../types'
+import { Authenticator } from '../authenticator'
 import { SSEManager } from './manager'
 
-export const sseConnection = ({ req, json }: Context): Response => {
-  const customerID = req.param('customerID')
-
-  if (!customerID) {
-    return json({ error: { message: 'Connection failed.' } } satisfies Failure, 400)
-  }
+export const sseConnection = ({ req, get }: Context): Response => {
+  const customerID = Authenticator.getCustomerID(get)
 
   const { writable, readable } = new TextEncoderStream()
   const writer = writable.getWriter()
@@ -15,7 +11,7 @@ export const sseConnection = ({ req, json }: Context): Response => {
   SSEManager.connect({ customerID, writer })
 
   req.raw.signal.addEventListener('abort', () => {
-    SSEManager.disconnect(customerID)
+    SSEManager.disconnect({ customerID, writer })
   })
 
   return new Response(readable, {

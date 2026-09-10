@@ -1,6 +1,7 @@
 import type { ServeOptions } from 'bun'
 import { Hono } from 'hono'
 import { cors } from 'hono/cors'
+import { Authenticator } from './01-infra/authenticator'
 import { env } from './01-infra/env'
 import { DetectionAssigner } from './01-infra/redis/queue/jobs/detection'
 import { S3Manager } from './01-infra/s3/manager'
@@ -16,12 +17,14 @@ app.use(cors({ origin: env.CLIENT_URL }))
 
 app.get('/health', (c): Response => c.json({ ok: true }))
 
-app.get('/event/:customerID', sseConnection)
+app.get('/event', Authenticator.guardStream, sseConnection)
 
 app.route('/identity', identityRouter)
 app.route('/image', imageRouter)
 
 DetectionAssigner(DetectionWorker.run)
+  .on('failed', DetectionWorker.handleFailed)
+  .on('completed', DetectionWorker.handleCompleted)
 
 const init = async (): Promise<void> => {
   await S3Manager.init()
