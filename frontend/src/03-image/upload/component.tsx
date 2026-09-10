@@ -19,7 +19,7 @@ type State = {
 
 const init: State = {
   severity: 'info',
-  message: 'The file must be an image, and be under 10MB.',
+  message: 'The file must be a PNG or JPEG image, and be under 10MB.',
   preview: null,
   file: null,
   isLoading: false,
@@ -32,15 +32,13 @@ const UploadComponent = (): JSX.Element => {
 
   useRealtime({
     event: 'detection',
-    handler({ data }) {
-      if (data === 'success') return navigate('/image/listing')
-
+    onSuccess: () => navigate('/image/listing'),
+    onFailure: () =>
       setState((p) => ({
         ...p,
         severity: 'error',
         message: 'Oops... The detection failed, please try with another image.',
-      }))
-    },
+      })),
   })
 
   const reset = ({

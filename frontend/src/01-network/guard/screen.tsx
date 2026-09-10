@@ -37,15 +37,14 @@ const items = [
 
 const GuardScreen = (): JSX.Element => {
   const navigate = useNavigate()
-  const token = Storer.get('token')
+  const token = Storer.getToken()
 
   useEffect(() => {
     if (!token) navigate('/identity', { replace: true })
   }, [token, navigate])
 
   const onClick = (): void => {
-    Storer.remove('sub')
-    Storer.remove('token')
+    Storer.removeToken()
     EventManager.disconnect()
     navigate('/identity', { replace: true })
   }

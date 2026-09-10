@@ -19,7 +19,7 @@ export const useRequest = <T>(): Request<T> => {
 
   return useCallback(
     async ({ path, method, body }: Options): Promise<Success<T> | Failure> => {
-      const token = Storer.get('token')
+      const token = Storer.getToken()
 
       try {
         const res = await fetch(`${env.VITE_API_URL}${path}`, {
@@ -31,9 +31,8 @@ export const useRequest = <T>(): Request<T> => {
           ...(body ? (!isFormData(body) ? { body: JSON.stringify(body) } : { body }) : {}),
         })
 
-        if (res.status === 401) {
-          Storer.remove('token')
-          Storer.remove('sub')
+        if (res.status === 401 && token) {
+          Storer.removeToken()
           navigate('/identity', { replace: true })
         }
 

@@ -43,8 +43,7 @@ const SignupComponent = (): JSX.Element => {
 
     if ('error' in res) return setAlert({ severity: 'error', message: res.error.message })
 
-    Storer.set({ key: 'sub', data: res.data.sub })
-    Storer.set({ key: 'token', data: res.data.token })
+    Storer.setToken(res.data.token)
 
     navigate('/image', { replace: true })
   }

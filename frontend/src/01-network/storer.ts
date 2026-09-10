@@ -1,16 +1,15 @@
-type Key = 'sub' | 'token'
-type Input = { key: Key; data: string }
+const KEY = 'token'
 
 export class Storer {
-  static set({ key, data }: Input): void {
-    sessionStorage.setItem(key, data)
+  static setToken(token: string): void {
+    sessionStorage.setItem(KEY, token)
   }
 
-  static get(key: Key): string | null {
-    return sessionStorage.getItem(key)
+  static getToken(): string | null {
+    return sessionStorage.getItem(KEY)
   }
 
-  static remove(key: Key): void {
-    sessionStorage.removeItem(key)
+  static removeToken(): void {
+    sessionStorage.removeItem(KEY)
   }
 }
